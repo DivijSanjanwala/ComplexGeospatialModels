@@ -1,0 +1,212 @@
+---
+title: "Lab Lecture #2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval=F)
+```
+
+## Simulations and Doing More with INLA
+
+Today we'll discuss: 
+
+- how to specify prior distributions in INLA
+- how to extract draws from the posterior distribution in INLA
+
+### Back to the PM2.5 Example
+
+Let's load in the data set: 
+
+```{r, message=F}
+library(INLA)
+library(ggplot2)
+load("bayes-vis.RData")
+```
+
+Last week, we fit linear models in INLA using complete, partial and no pooling when working with the PM2.5 data set. Let's investigate how to assign prior distributions to the three parameters in the linear model with complete pooling, $\beta_0, \beta_1, \sigma$. Recall that for a linear model, $y_i = \beta_0 + \beta_1 x_i + \epsilon_i$, where $\epsilon_i \sim N(0, \sigma^2)$, that
+
+- $\beta_0$ is the expected value of $y$ when $x_i$ is 0 
+- $\beta_1$ is the expected change in $y$ when $x_i$ increases by 1
+- $\sigma$ is the amount of variation around the line $\beta_0 + \beta_1 \boldsymbol{x}$ that we would expect to observe 
+
+Setting priors in INLA (from "Bayesian inference with INLA"):
+
+"The first thing to know about setting priors in INLA is that priors are set in the internal representation of the parameter, which may be different from the scale of the parameter in the model. For example, precisions are represented in the internal scale in the log-scale. This is computationally convenient because in the internal scale the parameter is not bounded. For example, the posterior mode of the hyperparameters can be obtained by maximizing the sum of the log-likelihood and the log-prior on the hyperparameters. This optimization step is used by INLA at the beginning of the model fitting to locate the posterior mode of the hyperparameters and find the region of high posterior density."
+
+Given that information, we need to identify the internal representation of a parameter in INLA: 
+
+- $\beta_0$ is not transformed
+- $\beta_1$ is not transformed
+- $\sigma$ -- instead of the standard deviation, INLA works with the precision, $\tau = 1/\sigma^2$, then, because $\tau \in (0, \infty)$, it maps it onto the real line with the natural log -- in the end, we set priors on $log(\tau)$
+
+In general, INLA works with the precision rather than the standard deviation or variance, and that will also affect how we specify the priors for $\beta_0$ and $\beta_1$ as well. 
+
+More information here: https://becarioprecario.bitbucket.io/inla-gitbook/ch-priors.html#tab:internalhyper and here: https://www.paulamoraga.com/book-geospatial/sec-inla.html 
+
+The following INLA code specifies the following priors: 
+
+- $\beta_0 \sim N( \mu = 0, \sigma^2 = 1/0.1)$
+- $\beta_1 \sim N(\mu = 0, \sigma^2 = 1/0.1))$
+- $\tau \sim Gamma(0.01, 0.01)$
+
+```{r, eval= F}
+
+## Adding in prior distributions
+### Default normal distributions for b0 and b1
+prior.fixed <- list(mean.intercept = 0, prec.intercept = 0.1,
+                    mean = 0, prec = 0.1)
+prior.prec <- list(prec = list(prior = "loggamma", 
+                               param = c(0.01, 0.01)))
+
+completepool <- inla(formula = pm25 ~ 1 + sat_2014, 
+                     data = data.frame(GM), 
+                     control.fixed = prior.fixed, 
+                     control.family = list(hyper = 
+                                             list(prec = prior.prec)))
+summary(completepool)
+```
+
+For the no pooling example, we can similarly specify the priors as above. Let's see how to run the multilevel model in INLA now. 
+
+Suppose we want to allow both the intercept and slope terms to vary by group. Then, our model would be written as: 
+
+$$
+y_{ij} \sim N(\mu_j + \beta_j x_i, \sigma^2)
+$$
+$$
+\mu_j \sim N(\mu, \sigma_{\mu} ^2)
+$$
+$$
+\beta_j \sim N(\beta, \sigma_{\beta}^2)
+$$
+
+For a fully Bayesian model, we need to specify priors for $\mu, \beta, \sigma_{\beta}, \sigma_{\mu}, \sigma$. However, remember that INLA parametrizes the models in terms of the precision rather than standard deviation and sets priors on the log transformed precision parameters. With that in mind, let $\tau_{\mu} \sim 1/\sigma_{\mu}^2$, $\tau_{\beta} \sim 1/\sigma_{\beta}^2$ and $\tau \sim 1/\sigma^2$. 
+
+The following INLA code specifies the following priors: 
+
+- $\beta_0 \sim N( \mu = 0, \sigma^2 = 1/0.1)$
+- $\beta_1 \sim N(\mu = 0, \sigma^2 = 1/0.1))$
+- $\tau \sim Gamma(0.01, 0.01)$
+- $\tau_{\mu} \sim Gamma(0.01, 0.01)$
+- $\tau_{\beta} \sim Gamma(0.01, 0.01)$
+
+```{r, eval= F}
+## Adding a column with numbers
+GM$super_region_name_dup <- GM$super_region_name
+## Adding in prior distributions
+### Default normal distributions for b0 and b1
+prior.fixed <- list(mean.intercept = 0, prec.intercept = 0.1,
+                    mean = 0, prec = 0.1)
+prior.prec <- list(prec = list(prior = "loggamma", 
+                               param = c(0.01, 0.01)))
+
+partialpool <- inla(formula = pm25 ~ 1 +    
+                       f(super_region_name,  
+                         model = "iid", 
+                         hyper = prior.prec) + 
+                       f(super_region_name_dup, sat_2014, 
+                         model = "iid",
+                         hyper = prior.prec), 
+                     data = data.frame(GM), 
+                     control.fixed = prior.fixed,
+                     control.family = list(hyper = 
+                                             list(prec = prior.prec)))
+summary(partialpool)
+```
+
+### Obtaining draws from the posterior distribution
+
+We can modify the INLA code in order to obtain draws from the posterior distribution. For this, we need to include `control.compute = list(config = TRUE)` in the model code. Let's rerun our models with the updated configuration. 
+
+```{r, eval= F}
+
+## Adding in prior distributions
+### Default normal distributions for b0 and b1
+prior.fixed <- list(mean.intercept = 0, prec.intercept = 0.1,
+                    mean = 0, prec = 0.1)
+prior.prec <- list(prec = list(prior = "loggamma", 
+                               param = c(0.01, 0.01)))
+
+completepool <- inla(formula = pm25 ~ 1 + sat_2014, 
+                     data = data.frame(GM), 
+                     control.fixed = prior.fixed, 
+                     control.family = list(hyper = 
+                                             list(prec = prior.prec)), 
+                     control.compute = list(config = TRUE))
+summary(completepool)
+
+## Sampling from posterior
+postdraws.cpool <- inla.posterior.sample(1000, completepool)
+postdraws.prec <- inla.hyperpar.sample(1000, completepool)
+```
+
+
+Let's see what is obtained in `postdraws.cpool`: 
+
+```{r}
+postdraws.cpool[[1]]$hyperpar
+head(postdraws.cpool[[1]]$latent)
+tail(postdraws.cpool[[1]]$latent)
+postdraws.cpool[[1]]$logdens
+```
+
+Each list contains one posterior draw. In order to obtain a vector of $N$ samples from the posterior distribution of $\beta_0$, we can do something like: 
+
+```{r}
+beta.post <- numeric(1000)
+for(j in 1:1000){
+  beta.post[j] <- postdraws.cpool[[j]]$latent[2981]
+}
+```
+
+We can something similar to obtain posterior draws from other parameters. Let's visualize the results:
+
+```{r}
+ggplot(data = data.frame(betapost = beta.post), aes(betapost)) +
+  geom_histogram(aes(y=..density..)) + 
+  geom_density() + 
+  ggtitle("Posterior Distribution for the Intercept")
+
+```
+
+We can go ahead and modify the INLA model to obtain posterior draws from the model with partial pooling. 
+
+```{r, eval= F}
+## Adding a column with numbers
+GM$super_region_name_dup <- GM$super_region_name
+## Adding in prior distributions
+### Default normal distributions for b0 and b1
+prior.fixed <- list(mean.intercept = 0, prec.intercept = 0.1,
+                    mean = 0, prec = 0.1)
+prior.prec <- list(prec = list(prior = "loggamma", 
+                               param = c(0.01, 0.01)))
+
+partialpool <- inla(formula = pm25 ~ 1 +    
+                       f(super_region_name,  
+                         model = "iid", 
+                         hyper = prior.prec) + 
+                       f(super_region_name_dup, sat_2014, 
+                         model = "iid",
+                         hyper = prior.prec), 
+                     data = data.frame(GM), 
+                     control.fixed = prior.fixed,
+                     control.family = list(hyper = 
+                                             list(prec = prior.prec)), 
+                    control.compute = list(config = TRUE))
+
+## Sampling from posterior
+postdraws.ppool <- inla.posterior.sample(1000, partialpool)
+
+```
+
+Let's see what is obtained in `postdraws.ppool`: 
+
+```{r}
+postdraws.ppool[[1]]$hyperpar
+head(postdraws.ppool[[1]]$latent)
+tail(postdraws.ppool[[1]]$latent, n = 20)
+postdraws.ppool[[1]]$logdens
+```
+
+

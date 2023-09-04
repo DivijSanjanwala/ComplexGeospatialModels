@@ -1,0 +1,743 @@
+---
+title: 'Lab Lecture #5'
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+
+We will use the Pennsylvania data set we have already covered in class. More information on the data and an analysis can be found here: https://journal.r-project.org/archive/2018/RJ-2018-036/RJ-2018-036.pdf
+
+```{r, message=FALSE, warning=FALSE}
+
+library(SpatialEpi)
+library(tidyverse)
+library(sf)
+library(spdep)
+
+data(pennLC)
+population <- pennLC$data$population
+cases <- pennLC$data$cases
+n.strata <- 16
+E <- expected(population, cases, n.strata)
+d <- aggregate(x = pennLC$data$cases, by = list(county = pennLC$data$county), FUN = sum)
+
+# from spatial polygon to simple feature
+pennLC.sf <- st_as_sf(pennLC$spatial.polygon)
+pennLC.sf$county <- d$county
+pennLC.sf$counts <- d$x
+pennLC.sf$E <- E[match(pennLC.sf$county, unique(pennLC$data$county))]
+pennLC.sf <- merge(pennLC.sf, pennLC$smoking, by.x = "county", by.y = "county")
+pennLC.sf <- pennLC.sf%>%
+  mutate(SIR = counts/E)
+
+```
+
+The BYM model for the data: 
+
+$$
+Y_i|\theta_i \sim Po(E_i  \theta_i) 
+$$
+
+$$
+log(\theta_i) = \beta_0 + \beta_1 \times smoking_i + u_i + v_i
+$$
+
+$$
+u_i|u_{j \sim i} \sim N\left( \frac{\sum_{j\sim i} u_j}{d_{i,i}}, \frac{1}{d_{i,i}\tau_u} \right)
+$$
+$$
+v_i \sim N\left( 0, \frac{1}{\tau_v} \right)
+$$
+
+where $\beta_0$ is the intercept, $\beta_1$ relates to the effect of proportion of smokers on lung cancer, $\tau_u$ and $\tau_v$ are the precision of the spatial and unstructured random effect, respectively. The expected counts per county are denoted by $E_i$ and total number of neighbors for location $n_i$ is denoted as $d_{i,i}$. 
+
+What is the geometry type and CRS of the Pennsylvania lip cancer data set (`pennLC.sf`)? Display counts, E, smoking, and SIR in a four panel plot. 
+
+Geometry type: POLYGON
+
+CRS: +proj=longlat +datum=WGS84 +no_defs 
+
+```{r}
+
+library(tmap)
+
+tm_shape(pennLC.sf) + tm_polygons(c("counts", "E", "smoking", "SIR")) +
+  tm_facets(ncol = 2)
+
+```
+
+
+We will fit a Besag-York-Mollié model to the data, but first do a few prior predictive checks. The ICAR structure is an improper and non-generative prior for the spatial random effect of the BYM model. However, we can impose a sum-to-zero constraint and use an eigenvalue decomposition to be able to generate data from the ICAR prior. 
+
+Use the following two sets of priors to simulate 100 data sets from the prior predictive distribution of the BYM model: 
+
+\begin{enumerate}
+\item $\beta_0 \sim N(0, 1)$, $\beta_1 \sim N(0, 1)$, $\tau_v \sim Gamma(1, 1)$, $\tau_u \sim Gamma(1, 1)$ 
+\item $\beta_0 \sim N(0, 10)$, $\beta_1 \sim N(0, 10)$, $\tau_v \sim Gamma(0.1, 0.1)$, $\tau_u \sim Gamma(0.1, 0.1)$ 
+\end{enumerate}
+
+For counties `centre`, `monroe`, `westmoreland`, `lebanon`, `beaver`, and `erie`, make a histogram of the prior predictive draws and add a vertical line at the observed value. 
+
+
+One of the biggest issues with sampling from the ICAR is not only imposing the sum-to-zero constraint for identifiability, but also recognizing that eigen values _close_ to zero should also be set to zero. Depending on the approach taken, there may be a varied amount of numerical instability when sampling. 
+
+
+```{r}
+
+neighbor.penn <- poly2nb(pennLC.sf)
+Wmat <- matrix(0, nrow=67, ncol=67)
+for(m in 1:67){
+  Wmat[m,neighbor.penn[[m]]] <- 1
+  Wmat[neighbor.penn[[m]],m] <- 1
+}  
+Dmat <- diag(sapply(1:67, function(i) length(neighbor.penn[[i]])))
+
+### Prior set 1
+beta0.pr1 <- rnorm(n=100, mean=0, sd=1)
+beta1.pr1 <- rnorm(n=100, mean=0, sd=1)
+tauv.pr1 <- rgamma(n=100, shape=1, scale=1)
+tauu.pr1 <- rgamma(n=100, shape=1, scale=1)
+
+### Prior set 2
+beta0.pr2 <- rnorm(n=100, mean=0, sd=10)
+beta1.pr2 <- rnorm(n=100, mean=0, sd=10)
+tauv.pr2 <- rgamma(n=100, shape=0.1, scale=0.1)
+tauu.pr2 <- rgamma(n=100, shape=0.1, scale=0.1)
+
+## Prior predictive 1
+unstruc.re.priorpred1 <- matrix(NA, nrow=67, ncol=100)
+spatial.re.priorpred1 <- matrix(NA, nrow=67, ncol=100)
+lambda.priorpred1 <- matrix(NA, nrow=67, ncol=100)
+ypriorpred1 <- matrix(NA, nrow=67, ncol=100)
+
+linear.priorpred1 <- beta0.pr1 + 
+  beta1.pr1*matrix(pennLC.sf$smoking, nrow=67, ncol=100) 
+
+for(j in 1:100){
+  
+  ## Unstructured Random Effect
+  unstruc.re.priorpred1[,j] <- rnorm(n=67, mean=0, sd=1/sqrt(tauv.pr1[j])) 
+
+  ## Structured Random Effect
+  Qmat <- tauu.pr1[j]*(Dmat-Wmat)
+  print(Qmat)
+  Qmat.eigen <- eigen(Qmat)
+  eigen.diag.comp <- 1/sqrt(Qmat.eigen$values)
+  ### numerical instability
+  eigen.diag.comp[is.na(eigen.diag.comp)] <- 0
+  x <- Qmat.eigen$vectors%*%
+    diag(eigen.diag.comp)%*%
+    matrix(rnorm(n=67, mean=0, sd=1), nrow=67, ncol=1)
+  spatial.re.priorpred1[,j] <- x  
+ 
+  ## Lambda of Poisson
+  lambda.priorpred1[,j] <- matrix(pennLC.sf$E, nrow=1, ncol=67)*
+    exp(linear.priorpred1[,j] + 
+          unstruc.re.priorpred1[,j] + 
+          spatial.re.priorpred1[,j])
+
+  ## Prior Predictive Counts
+  ypriorpred1[,j] <- rpois(n = 67, lambda = lambda.priorpred1[,j])
+  
+}
+
+## Prior predictive 2  
+unstruc.re.priorpred2 <- matrix(NA, nrow=67, ncol=100)
+spatial.re.priorpred2 <- matrix(NA, nrow=67, ncol=100)
+lambda.priorpred2 <- matrix(NA, nrow=67, ncol=100)
+ypriorpred2 <- matrix(NA, nrow=67, ncol=100)
+
+linear.priorpred2 <- beta0.pr2 + 
+  beta1.pr2*matrix(pennLC.sf$smoking, nrow=67, ncol=100) 
+
+for(j in 1:100){
+  
+  ## Unstructured Random Effect
+  unstruc.re.priorpred2[,j] <- rnorm(n=67, mean=0, sd=1/sqrt(tauv.pr2[j])) 
+
+  ## Structured Random Effect
+  Qmat <- tauu.pr2[j]*(Dmat-Wmat) 
+  Qmat.eigen <- eigen(Qmat)
+  eigen.diag.comp <- 1/sqrt(Qmat.eigen$values)
+  ### numerical instability
+  eigen.diag.comp[is.na(eigen.diag.comp)] <- 0
+  x <- Qmat.eigen$vectors%*%
+    diag(eigen.diag.comp)%*%
+    matrix(rnorm(n=67, mean=0, sd=1), nrow=67, ncol=1)
+  spatial.re.priorpred2[,j] <- x  
+ 
+  ## Lambda of Poisson
+  lambda.priorpred2[,j] <- matrix(pennLC.sf$E, nrow=1, ncol=67)*
+    exp(linear.priorpred2[,j] + 
+          unstruc.re.priorpred2[,j] + 
+          spatial.re.priorpred2[,j])
+
+  ## Prior Predictive Counts
+  ypriorpred2[,j] <- rpois(n = 67, lambda = lambda.priorpred2[,j])
+  
+}
+
+```
+
+Let's make the histograms for the prior predictive draws of `centre`, `monroe`, `westmoreland`, `lebanon`, `beaver`, and `erie`. 
+
+```{r, fig.height=10}
+
+counties <- c("centre", "monroe", "westmoreland", "lebanon", "beaver", "erie")
+
+par(mfrow=c(6,1))
+
+hist(ypriorpred1[4,], #xlim=c(0, pennLC.sf$counts[4] + 50),
+     main="beaver: prior predictive 1", xlab = "counts")
+abline(v=pennLC.sf$counts[4], lwd=3, col="red")
+text(50, 20, paste("Number of NAs:", sum(is.na(ypriorpred1[4,]))))
+
+hist(ypriorpred1[14,], #xlim=c(0, pennLC.sf$counts[14] + 50),
+     main="centre: prior predictive 1" , xlab = "counts")
+abline(v=pennLC.sf$counts[14], lwd=3, col="red")
+text(50, 20, paste("Number of NAs:", sum(is.na(ypriorpred1[14,]))))
+
+hist(ypriorpred1[25,], #xlim=c(0, pennLC.sf$counts[25] + 50),
+     main="erie: prior predictive 1", xlab = "counts")
+abline(v=pennLC.sf$counts[25], lwd=3, col="red")
+text(50, 20, paste("Number of NAs:", sum(is.na(ypriorpred1[25,]))))
+
+hist(ypriorpred1[38,], #xlim=c(0, pennLC.sf$counts[38] + 50),
+     main="lebanon: prior predictive 1", xlab = "counts")
+abline(v=pennLC.sf$counts[38], lwd=3, col="red")
+text(50, 20, paste("Number of NAs:", sum(is.na(ypriorpred1[38,]))))
+
+hist(ypriorpred1[45,], #xlim=c(0, pennLC.sf$counts[45] + 50),
+     main="monroe: prior predictive 1", xlab = "counts")
+abline(v=pennLC.sf$counts[45], lwd=3, col="red")
+text(50, 20, paste("Number of NAs:", sum(is.na(ypriorpred1[45,]))))
+
+hist(ypriorpred1[65,], #xlim=c(0, pennLC.sf$counts[65] + 50),
+     main="westmoreland: prior predictive 1", xlab = "counts")
+abline(v=pennLC.sf$counts[65], lwd=3, col="red")
+text(50, 20, paste("Number of NAs:", sum(is.na(ypriorpred1[65,]))))
+
+```
+
+
+```{r, fig.height=10}
+
+par(mfrow=c(6,1))
+
+hist(ypriorpred2[4,], #xlim=c(0, pennLC.sf$counts[4] + 50),
+     main="beaver: prior predictive 2", xlab = "counts")
+abline(v=pennLC.sf$counts[4], lwd=3, col="red")
+text(10, 20, paste("Number of NAs:", sum(is.na(ypriorpred2[4,]))))
+
+hist(ypriorpred2[14,], #xlim=c(0, pennLC.sf$counts[14] + 50),
+     main="centre: prior predictive 2" , xlab = "counts")
+abline(v=pennLC.sf$counts[14], lwd=3, col="red")
+text(10, 20, paste("Number of NAs:", sum(is.na(ypriorpred2[14,]))))
+
+hist(ypriorpred2[25,], #xlim=c(0, pennLC.sf$counts[25] + 50),  
+     main="erie: prior predictive 2", xlab = "counts")
+abline(v=pennLC.sf$counts[25], lwd=3, col="red")
+text(10, 20, paste("Number of NAs:", sum(is.na(ypriorpred2[25,]))))
+
+hist(ypriorpred2[38,], #xlim=c(0, pennLC.sf$counts[38] + 50),
+     main="lebanon: prior predictive 2", xlab = "counts")
+abline(v=pennLC.sf$counts[38], lwd=3, col="red")
+text(10, 20, paste("Number of NAs:", sum(is.na(ypriorpred2[38,]))))
+
+hist(ypriorpred2[45,], #xlim=c(0, pennLC.sf$counts[45] + 50),
+     main="monroe: prior predictive 2", xlab = "counts")
+abline(v=pennLC.sf$counts[45], lwd=3, col="red")
+text(10, 20, paste("Number of NAs:", sum(is.na(ypriorpred2[45,]))))
+
+hist(ypriorpred2[65,], #xlim=c(0, pennLC.sf$counts[65] + 50), 
+     main="westmoreland: prior predictive 2", xlab = "counts")
+abline(v=pennLC.sf$counts[65], lwd=3, col="red")
+text(10, 20, paste("Number of NAs:", sum(is.na(ypriorpred2[65,]))))
+
+```
+
+
+For prior sets 1 and 2 given in Question 1.2, create maps of 4 different prior predictive draws for lung cancer counts in Pennsylvania. You should have a total of 8 plots.  
+
+
+```{r}
+
+pennLC.sf$pp1.1 <- ypriorpred1[,1]
+pennLC.sf$pp1.2 <- ypriorpred1[,2]
+pennLC.sf$pp1.3 <- ypriorpred1[,3]
+pennLC.sf$pp1.4 <- ypriorpred1[,4]
+
+pennLC.sf$pp2.1 <- ypriorpred2[,1]
+pennLC.sf$pp2.2 <- ypriorpred2[,2]
+pennLC.sf$pp2.3 <- ypriorpred2[,3]
+pennLC.sf$pp2.4 <- ypriorpred2[,4]
+
+```
+
+Maps -- no numbers in counties reflects NAs. 
+
+```{r}
+
+library(tmap)
+
+## Maps of 0 and NAs
+pp1.m1 <- tm_shape(pennLC.sf) + tm_polygons("pp1.1") + 
+  tm_layout(main.title="Prior Predictive -- Prior 1") 
+pp1.m2 <- tm_shape(pennLC.sf) + tm_polygons("pp1.2") +
+  tm_layout(main.title="Prior Predictive -- Prior 1") 
+pp1.m3 <- tm_shape(pennLC.sf) + tm_polygons("pp1.3") +
+  tm_layout(main.title="Prior Predictive -- Prior 1") 
+pp1.m4 <- tm_shape(pennLC.sf) + tm_polygons("pp1.4") + 
+  tm_layout(main.title="Prior Predictive -- Prior 1") 
+
+tmap_arrange(pp1.m1, pp1.m2, pp1.m3, pp1.m4)
+
+## Maps of 0 and NAs
+pp2.m1 <- tm_shape(pennLC.sf) + tm_polygons("pp2.1") +
+  tm_layout(main.title="Prior Predictive -- Prior 2")
+pp2.m2 <- tm_shape(pennLC.sf) + tm_polygons("pp2.2") +
+  tm_layout(main.title="Prior Predictive -- Prior 2")
+pp2.m3 <- tm_shape(pennLC.sf) + tm_polygons("pp2.3") +
+  tm_layout(main.title="Prior Predictive -- Prior 2")
+pp2.m4 <- tm_shape(pennLC.sf) + tm_polygons("pp2.4") +
+  tm_layout(main.title="Prior Predictive -- Prior 2")
+
+tmap_arrange(pp2.m1, pp2.m2, pp2.m3, pp2.m4)
+
+
+```
+
+Fit the model in INLA using the two different sets of priors and use the default priors specified in INLA (a total of 3 models). 
+
+```{r, warning=FALSE, message=FALSE}
+
+## Example code for the BYM model -- modify as needed
+library(INLA)
+
+## Values of E_i and neighborhood structure
+E.penn <- pennLC.sf$E
+neighbor.penn <- poly2nb(pennLC.sf)
+
+nb2INLA("npenn.adj", neighbor.penn)
+g <- inla.read.graph(filename = "npenn.adj")
+
+pennLC.sf$re_u <- 1:nrow(pennLC.sf)
+pennLC.sf$re_v <- 1:nrow(pennLC.sf)
+
+```
+
+
+```{r}
+formula1 <- counts ~ smoking + 
+  f(re_u, model = "besag", graph = g, 
+    hyper = list(prec = list(prior = "loggamma",param = c(1, 1)))) + 
+  f(re_v, model = "iid", 
+    hyper = list(prec = list(prior = "loggamma",param = c(1, 1))))
+
+res1 <- inla(formula1, family = "poisson", data = pennLC.sf, E = E.penn,
+            control.predictor = list(compute = TRUE), 
+            control.fixed = list(mean.intercept = 0, 
+                                 prec.intercept = 1, 
+                                 mean = 0, 
+                                 prec = 1), 
+            control.compute=list(config = TRUE))
+
+formula2 <- counts ~ smoking + 
+  f(re_u, model = "besag", graph = g, 
+    hyper = list(prec = list(prior = "loggamma",param = c(0.1,  0.1)))) + 
+  f(re_v, model = "iid", 
+    hyper = list(prec = list(prior = "loggamma",param = c(0.1,  0.1))))
+
+res2 <- inla(formula2, family = "poisson", data = pennLC.sf, E = E.penn,
+            control.predictor = list(compute = TRUE), 
+            control.fixed = list(mean.intercept = 0, 
+                                 prec.intercept = 1/100, 
+                                 mean = 0, 
+                                 prec = 1/100), 
+            control.compute=list(config = TRUE))
+
+formula3 <- counts ~ smoking + 
+  f(re_u, model = "besag", graph = g) + 
+  f(re_v, model = "iid")
+
+res3 <- inla(formula3, family = "poisson", data = pennLC.sf, E = E.penn,
+            control.predictor = list(compute = TRUE),
+            control.compute=list(config = TRUE))
+
+
+summary(res1)
+summary(res2)
+summary(res3)
+
+```
+
+\begin{table}
+\centering
+\begin{tabular}{l c c c}
+Model & Parameter & Mean & 95\% CI \\
+\hline 
+Model 1 & $\beta_0$ & `r res1$summary.fixed$mean[1]` & (`r res1$summary.fixed$"0.025quant"[1]`, `r res1$summary.fixed$"0.975quant"[1]`)\\
+Model 1 & $\beta_1$ & `r res1$summary.fixed$mean[2]` & (`r res1$summary.fixed$"0.025quant"[2]`, `r res1$summary.fixed$"0.975quant"[2]`) \\
+Model 1 & $\tau_u$ & `r res1$summary.hyperpar$mean[1]` &  (`r res1$summary.hyperpar$"0.025quant"[1]`, `r res1$summary.hyperpar$"0.975quant"[1]`)\\
+Model 1 & $\tau_v$ & `r res1$summary.hyperpar$mean[2]` &  (`r res1$summary.hyperpar$"0.025quant"[2]`, `r res1$summary.hyperpar$"0.975quant"[2]`)\\
+\hline
+Model 2 & $\beta_0$ &  `r res2$summary.fixed$mean[1]` & (`r res2$summary.fixed$"0.025quant"[1]`, `r res2$summary.fixed$"0.975quant"[1]`)\\
+Model 2 & $\beta_1$ &`r res2$summary.fixed$mean[2]`  &(`r res2$summary.fixed$"0.025quant"[2]`, `r res2$summary.fixed$"0.975quant"[2]`) \\
+Model 2 & $\tau_u$ &`r res2$summary.hyperpar$mean[1]` & (`r res2$summary.hyperpar$"0.025quant"[1]`, `r res2$summary.hyperpar$"0.975quant"[1]`)\\
+Model 2 & $\tau_v$ &`r res2$summary.hyperpar$mean[2]` & (`r res2$summary.hyperpar$"0.025quant"[2]`, `r res2$summary.hyperpar$"0.975quant"[2]`)\\
+\hline
+Model 3 & $\beta_0$ &`r res3$summary.fixed$mean[1]`  & (`r res3$summary.fixed$"0.025quant"[1]`, `r res3$summary.fixed$"0.975quant"[1]`)\\
+Model 3 & $\beta_1$ & `r res3$summary.fixed$mean[2]` & (`r res3$summary.fixed$"0.025quant"[2]`, `r res3$summary.fixed$"0.975quant"[2]`)\\
+Model 3 & $\tau_u$ &`r res3$summary.hyperpar$mean[1]` & (`r res3$summary.hyperpar$"0.025quant"[1]`, `r res3$summary.hyperpar$"0.975quant"[1]`)\\
+Model 3 & $\tau_v$ &`r res3$summary.hyperpar$mean[2]` & (`r res3$summary.hyperpar$"0.025quant"[2]`, `r res3$summary.hyperpar$"0.975quant"[2]`)\\
+\hline
+\end{tabular}
+\end{table}
+
+Create two maps of the results for each fitted model. 
+
+\begin{itemize}
+\item Map 1: mean expected count of lung cancer cases across Pennsylvania. 
+\item Map 2: standard deviation of expected counts of lung cancer cases across Pennsylvania
+\end{itemize}
+
+
+```{r, eval=FALSE}
+
+## Example code for Map 1: 
+res$summary.fitted.values[,"mean"]
+
+## Example code for Map 2:
+res$summary.fitted.values[,"sd"]
+
+```
+
+```{r}
+
+pennLC.sf$model1.mean <- res1$summary.fitted.values[,"mean"]*E.penn
+pennLC.sf$model1.sd <- res1$summary.fitted.values[,"sd"]*E.penn
+pennLC.sf$model2.mean <- res2$summary.fitted.values[,"mean"]*E.penn
+pennLC.sf$model2.sd <- res2$summary.fitted.values[,"sd"]*E.penn
+pennLC.sf$model3.mean <- res3$summary.fitted.values[,"mean"]*E.penn
+pennLC.sf$model3.sd <- res3$summary.fitted.values[,"sd"]*E.penn
+
+```
+
+
+Model 1
+
+```{r}
+res.m1.mean <- tm_shape(pennLC.sf) + 
+  tm_polygons("model1.mean") + 
+  tm_layout(main.title = "Predicted Counts")
+
+res.m1.sd <- tm_shape(pennLC.sf) + 
+  tm_polygons("model1.sd") + 
+  tm_layout(main.title = "Standard Deviation of Predicted Counts")
+
+tmap_arrange(res.m1.mean, res.m1.sd, ncol=1)
+```
+
+Model 2
+
+```{r}
+res.m2.mean <- tm_shape(pennLC.sf) + 
+  tm_polygons("model2.mean") + 
+  tm_layout(main.title = "Predicted Counts")
+
+res.m2.sd <- tm_shape(pennLC.sf) + 
+  tm_polygons("model2.sd") + 
+  tm_layout(main.title = "Standard Deviation of Predicted Counts")
+
+tmap_arrange(res.m2.mean, res.m2.sd, ncol=1)
+```
+
+Model 3
+
+```{r}
+res.m3.mean <- tm_shape(pennLC.sf) + 
+  tm_polygons("model3.mean") + 
+  tm_layout(main.title = "Predicted Counts")
+
+res.m3.sd <- tm_shape(pennLC.sf) + 
+  tm_polygons("model3.sd") + 
+  tm_layout(main.title = "Standard Deviation of Predicted Counts")
+
+tmap_arrange(res.m3.mean, res.m3.sd, ncol=1)
+
+```
+
+Simulate 100 data sets from the posterior predictive distribution per each of the three fitted models. For counties `centre`, `monroe`, `westmoreland`, `lebanon`, `beaver`, and `erie`, make a histogram of the posterior predictive draws and add a vertical line at the observed value. 
+
+```{r}
+
+postpred1 <- inla.posterior.sample(n=100, res1)
+postpred2 <- inla.posterior.sample(n=100, res2)
+postpred3 <- inla.posterior.sample(n=100, res3)
+
+## Posterior predictive 1
+unstruc.re.postpred1 <- matrix(NA, nrow=67, ncol=100)
+spatial.re.postpred1 <- matrix(NA, nrow=67, ncol=100)
+lambda.postpred1 <- matrix(NA, nrow=67, ncol=100)
+ypostpred1 <- matrix(NA, nrow=67, ncol=100)
+linear.postpred1 <- matrix(NA, nrow=67, ncol=100)
+
+  unstruc.index <- which(rownames(postpred1[[1]]$latent) %in% paste("re_v:", 1:67, sep=""))
+  struc.index <- which(rownames(postpred1[[1]]$latent) %in% paste("re_u:", 1:67, sep=""))
+  intercept.index <- which(rownames(postpred1[[1]]$latent) %in% "(Intercept):1")
+  slope.index <- which(rownames(postpred1[[1]]$latent) %in% "smoking:1")
+    
+for(j in 1:100){
+  
+  ## Unstructured Random Effect
+  unstruc.re.postpred1[,j] <- postpred1[[j]]$latent[unstruc.index]
+
+  ## Structured Random Effect
+  spatial.re.postpred1[,j] <- postpred1[[j]]$latent[struc.index]  
+ 
+  ## Linear Terms
+  linear.postpred1[,j] <- postpred1[[j]]$latent[intercept.index] + 
+  postpred1[[j]]$latent[slope.index]*pennLC.sf$smoking
+  
+  ## Lambda of Poisson
+  lambda.postpred1[,j] <- pennLC.sf$E*
+    exp(linear.postpred1[,j] + 
+          unstruc.re.postpred1[,j] + 
+          spatial.re.postpred1[,j])
+
+  ## Prior Predictive Counts
+  ypostpred1[,j] <- rpois(n = 67, lambda = lambda.postpred1[,j])
+  
+}
+
+
+## Posterior predictive 2
+unstruc.re.postpred2 <- matrix(NA, nrow=67, ncol=100)
+spatial.re.postpred2 <- matrix(NA, nrow=67, ncol=100)
+lambda.postpred2 <- matrix(NA, nrow=67, ncol=100)
+ypostpred2 <- matrix(NA, nrow=67, ncol=100)
+linear.postpred2 <- matrix(NA, nrow=67, ncol=100)
+    
+for(j in 1:100){
+  
+  ## Unstructured Random Effect
+  unstruc.re.postpred2[,j] <- postpred2[[j]]$latent[unstruc.index]
+
+  ## Structured Random Effect
+  spatial.re.postpred2[,j] <- postpred2[[j]]$latent[struc.index]  
+ 
+  ## Linear Terms
+  linear.postpred2[,j] <- postpred2[[j]]$latent[intercept.index] + 
+  postpred2[[j]]$latent[slope.index]*pennLC.sf$smoking
+  
+  ## Lambda of Poisson
+  lambda.postpred2[,j] <- pennLC.sf$E*
+    exp(linear.postpred2[,j] + 
+          unstruc.re.postpred2[,j] + 
+          spatial.re.postpred2[,j])
+
+  ## Prior Predictive Counts
+  ypostpred2[,j] <- rpois(n = 67, lambda = lambda.postpred2[,j])
+  
+}
+
+## Posterior predictive 3
+unstruc.re.postpred3 <- matrix(NA, nrow=67, ncol=100)
+spatial.re.postpred3 <- matrix(NA, nrow=67, ncol=100)
+lambda.postpred3 <- matrix(NA, nrow=67, ncol=100)
+ypostpred3 <- matrix(NA, nrow=67, ncol=100)
+linear.postpred3 <- matrix(NA, nrow=67, ncol=100)
+    
+for(j in 1:100){
+  
+  ## Unstructured Random Effect
+  unstruc.re.postpred3[,j] <- postpred3[[j]]$latent[unstruc.index]
+
+  ## Structured Random Effect
+  spatial.re.postpred3[,j] <- postpred3[[j]]$latent[struc.index]  
+ 
+  ## Linear Terms
+  linear.postpred3[,j] <- postpred3[[j]]$latent[intercept.index] + 
+  postpred3[[j]]$latent[slope.index]*pennLC.sf$smoking
+  
+  ## Lambda of Poisson
+  lambda.postpred3[,j] <- pennLC.sf$E*
+    exp(linear.postpred3[,j] + 
+          unstruc.re.postpred3[,j] + 
+          spatial.re.postpred3[,j])
+
+  ## Prior Predictive Counts
+  ypostpred3[,j] <- rpois(n = 67, lambda = lambda.postpred3[,j])
+  
+}
+    
+  
+```
+
+__Results for posterior predictive 1__
+
+```{r, fig.height=10}
+
+par(mfrow=c(6,1))
+
+hist(ypostpred1[4,], xlim=c(0, pennLC.sf$counts[4]+50), 
+     main="beaver: posterior predictive 1", xlab = "counts")
+abline(v=pennLC.sf$counts[4], lwd=3, col="red")
+
+hist(ypostpred1[14,], xlim=c(0, pennLC.sf$counts[14]+50), 
+     main="centre: posterior predictive 1" , xlab = "counts")
+abline(v=pennLC.sf$counts[14], lwd=3, col="red")
+
+hist(ypostpred1[25,], xlim=c(0, pennLC.sf$counts[25]+50), 
+     main="erie: posterior predictive 1", xlab = "counts")
+abline(v=pennLC.sf$counts[25], lwd=3, col="red")
+
+hist(ypostpred1[38,], xlim=c(0, pennLC.sf$counts[38]+50), 
+     main="lebanon: posterior predictive 1", xlab = "counts")
+abline(v=pennLC.sf$counts[38], lwd=3, col="red")
+
+hist(ypostpred1[45,], xlim=c(0, pennLC.sf$counts[45]+50), 
+     main="monroe: posterior predictive 1", xlab = "counts")
+abline(v=pennLC.sf$counts[45], lwd=3, col="red")
+
+hist(ypostpred1[65,], xlim=c(0, pennLC.sf$counts[65]+50), 
+     main="westmoreland: posterior predictive 1", xlab = "counts")
+abline(v=pennLC.sf$counts[65], lwd=3, col="red")
+```
+
+
+__Results for posterior predictive 2__
+
+```{r, fig.height=10}
+
+par(mfrow=c(6,1))
+
+hist(ypostpred2[4,], xlim=c(0, pennLC.sf$counts[4]+50), 
+     main="beaver: posterior predictive 2", xlab = "counts")
+abline(v=pennLC.sf$counts[4], lwd=3, col="red")
+
+hist(ypostpred2[14,], xlim=c(0, pennLC.sf$counts[14]+50), 
+     main="centre: posterior predictive 2" , xlab = "counts")
+abline(v=pennLC.sf$counts[14], lwd=3, col="red")
+
+hist(ypostpred2[25,], xlim=c(0, pennLC.sf$counts[25]+50), 
+     main="erie: posterior predictive 2", xlab = "counts")
+abline(v=pennLC.sf$counts[25], lwd=3, col="red")
+
+hist(ypostpred2[38,], xlim=c(0, pennLC.sf$counts[38]+50), 
+     main="lebanon: posterior predictive 2", xlab = "counts")
+abline(v=pennLC.sf$counts[38], lwd=3, col="red")
+
+hist(ypostpred2[45,], xlim=c(0, pennLC.sf$counts[45]+50), 
+     main="monroe: posterior predictive 2", xlab = "counts")
+abline(v=pennLC.sf$counts[45], lwd=3, col="red")
+
+hist(ypostpred2[65,], xlim=c(0, pennLC.sf$counts[65]+50), 
+     main="westmoreland: posterior predictive 2", xlab = "counts")
+abline(v=pennLC.sf$counts[65], lwd=3, col="red")
+```
+
+__Results for posterior predictive 3__
+
+```{r, fig.height=10}
+
+par(mfrow=c(6,1))
+
+hist(ypostpred3[4,], xlim=c(0, pennLC.sf$counts[4]+50), 
+     main="beaver: posterior predictive 3", xlab = "counts")
+abline(v=pennLC.sf$counts[4], lwd=3, col="red")
+
+hist(ypostpred3[14,], xlim=c(0, pennLC.sf$counts[14]+50), 
+     main="centre: posterior predictive 3" , xlab = "counts")
+abline(v=pennLC.sf$counts[14], lwd=3, col="red")
+
+hist(ypostpred3[25,], xlim=c(0, pennLC.sf$counts[25]+50), 
+     main="erie: posterior predictive 3", xlab = "counts")
+abline(v=pennLC.sf$counts[25], lwd=3, col="red")
+
+hist(ypostpred3[38,], xlim=c(0, pennLC.sf$counts[38]+50), 
+     main="lebanon: posterior predictive 3", xlab = "counts")
+abline(v=pennLC.sf$counts[38], lwd=3, col="red")
+
+hist(ypostpred3[45,], xlim=c(0, pennLC.sf$counts[45]+50), 
+     main="monroe: posterior predictive 3", xlab = "counts")
+abline(v=pennLC.sf$counts[45], lwd=3, col="red")
+
+hist(ypostpred3[65,], xlim=c(0, pennLC.sf$counts[65]+50), 
+     main="westmoreland: posterior predictive 3", xlab = "counts")
+abline(v=pennLC.sf$counts[65], lwd=3, col="red")
+```
+
+Per each of the three fitted models in Question 1.4, create maps of 4 different posterior predictive draws for lung cancer counts in Pennsylvania (a total of 12 maps). 
+
+Adding columns of posterior predictive draws to `pennLC.sf`. 
+
+```{r}
+
+pennLC.sf$popr1.1 <- ypostpred1[,1]
+pennLC.sf$popr1.2 <- ypostpred1[,2]
+pennLC.sf$popr1.3 <- ypostpred1[,3]
+pennLC.sf$popr1.4 <- ypostpred1[,4]
+
+pennLC.sf$popr2.1 <- ypostpred2[,1]
+pennLC.sf$popr2.2 <- ypostpred2[,2]
+pennLC.sf$popr2.3 <- ypostpred2[,3]
+pennLC.sf$popr2.4 <- ypostpred2[,4]
+
+pennLC.sf$popr3.1 <- ypostpred3[,1]
+pennLC.sf$popr3.2 <- ypostpred3[,2]
+pennLC.sf$popr3.3 <- ypostpred3[,3]
+pennLC.sf$popr3.4 <- ypostpred3[,4]
+
+```
+
+Making maps. 
+
+```{r, fig.height=10}
+
+library(tmap)
+
+## Posterior predictive 1
+popr1.m1 <- tm_shape(pennLC.sf) + tm_polygons(col="popr1.1") + 
+  tm_layout(main.title="PosteriorPredictive -- Prior 1")
+popr1.m2 <- tm_shape(pennLC.sf) + tm_polygons(col="popr1.2") +
+  tm_layout(main.title="Posterior Predictive -- Prior 1")
+popr1.m3 <- tm_shape(pennLC.sf) + tm_polygons(col="popr1.3") +
+  tm_layout(main.title="Posterior Predictive -- Prior 1")
+popr1.m4 <- tm_shape(pennLC.sf) + tm_polygons(col="popr1.4") + 
+  tm_layout(main.title="Posterior Predictive -- Prior 1") 
+
+tmap_arrange(popr1.m1, popr1.m2, popr1.m3, popr1.m4, ncol=1)
+
+## Posterior predictive 2
+popr2.m1 <- tm_shape(pennLC.sf) + tm_polygons(col="popr2.1") +
+  tm_layout(main.title="Posterior Predictive -- Prior 2")
+popr2.m2 <- tm_shape(pennLC.sf) + tm_polygons(col="popr2.2") +
+  tm_layout(main.title="Posterior Predictive -- Prior 2") 
+popr2.m3 <- tm_shape(pennLC.sf) + tm_polygons(col="popr2.3") +
+  tm_layout(main.title="PosteriorPredictive -- Prior 2") 
+popr2.m4 <- tm_shape(pennLC.sf) + tm_polygons(col="popr2.4") +
+  tm_layout(main.title="Posterior Predictive -- Prior 2") 
+
+tmap_arrange(popr2.m1, popr2.m2, popr2.m3, popr2.m4, ncol=1)
+
+## Posterior predictive 3
+popr3.m1 <- tm_shape(pennLC.sf) + tm_polygons(col="popr3.1") +
+  tm_layout(main.title="Posterior Predictive -- Default Prior") 
+popr3.m2 <- tm_shape(pennLC.sf) + tm_polygons(col="popr3.2") +
+  tm_layout(main.title="Posterior Predictive -- Default Prior") 
+popr3.m3 <- tm_shape(pennLC.sf) + tm_polygons(col="popr3.3") +
+  tm_layout(main.title="Posterior Predictive -- Default Prior") 
+popr3.m4 <- tm_shape(pennLC.sf) + tm_polygons(col="popr3.4") +
+  tm_layout(main.title="Posterior Predictive -- Default Prior") 
+
+tmap_arrange(popr3.m1, popr3.m2, popr3.m3, popr3.m4, ncol=1)
+
+```
+
+

@@ -1,0 +1,581 @@
+---
+title: "Homework 3 - Divij Sanjanwala"
+output: html_document
+always_allow_html: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+options(warn=-1)
+```
+
+```{r}
+## R packages 
+setwd(getwd())
+library(SpatialEpi)
+library(tidyverse)
+library(sf)
+library(spdep)
+library(rmarkdown)
+library(INLA)
+library(tmap) ## Very commonly used -- to make static and interactive plots
+library(mapview)
+library(cowplot)
+library(reshape2)
+library(leaflet)
+library(raster)
+library(shiny)
+library(MASS)
+library(tidyverse)
+library(spDataLarge) ## Data sets -- use commands in notes to download
+library(spData) ## Data sets
+library(sf) ## simple features
+## Example code for the BYM model -- modify as needed
+library(INLA)
+library('spocc')
+library(geoR)
+library(sp)
+library(rgdal)
+library(tmap)
+library(raster)
+library(geodist)
+library(rSPDE)
+library(sf) # working with spatial vector data
+library(terra) # working with spatial raster data
+library(tmap) # plotting maps
+tmap_mode("plot")
+```
+
+# Question 1:
+
+We will fit a spatial point process model to the sloth occurrence data set. 
+
+The data is available in the Hwk4Files folder in Quercus: Hwk4Data.RData. 
+
+The data can also be obtained by following the steps in the Sloth Case Study: 
+https://www.paulamoraga.com/tutorial-point-patterns/#1_abstract
+
+The INLA code to fit the model with default priors is:
+
+```{r}
+load("./Hwk4Data.RData", .GlobalEnv)
+```
+
+## Question 1.1: What class is the grid data set? What is the CRS?
+
+```{r}
+class(grid)
+```
+## Question 1.2: 
+
+Fit two models to the sloth occurrence data.
+
+• Model 1 – set weakly informative priors for the ‘iid‘ and ‘rw2d‘ components
+• Model 2 – set non informative priors for the ‘iid‘ and ‘rw2d‘ components
+
+Include all R + INLA code. Present the results of the estimates along with 95% credible intervals in a table –
+not as INLA output. Comment on any differences across the estimates of the models.
+
+```{r}
+ncol <- ncol(r)
+nrow <- nrow(r)
+
+formula.weak <- Y ~ 1 + cov +
+  f(id, model="rw2d", nrow = nrow, ncol = ncol, hyper = list(prec = list(prior = "normal", param = c(0, 1)))) +
+  f(id2, model="iid", hyper = list(prec = list(prior = "normal", param = c(0, 1))))
+
+res.weak <- inla(formula.weak, family = "poisson",
+               data = grid@data,
+               E = cellarea, control.predictor = list(compute = TRUE), control.inla=list(control.vb=list(emergency=50)))
+
+formula.non.inform <- Y ~ 1 + cov +
+  f(id, model="rw2d", nrow = nrow, ncol = ncol, hyper = list(prec = list(type = "fixed", lower = 0, upper = 1))) +
+  f(id2, model="iid", hyper = list(prec = list(type = "fixed", lower = 0, upper = 1)))
+
+res.non.inform <- inla(formula.non.inform, family = "poisson",
+               data = grid@data,
+               E = cellarea, control.predictor = list(compute = TRUE), control.inla=list(control.vb=list(emergency=50)))
+```
+```{r}
+# Add model names to each data frame
+model1.predictors <- cbind(Model = "Model 1 - weakly informative priors", res.weak$summary.fixed[c("mean", "0.025quant", "0.975quant")])
+model2.predictors <- cbind(Model = "Model 2 - noninformative priors", res.non.inform$summary.fixed[c("mean", "0.025quant", "0.975quant")])
+
+model1.params <-cbind(Model = "Model 1 - weakly informative priors", res.weak$summary.hyperpar)
+model2.params <- cbind(Model = "Model 2 - noninformative priors", res.non.inform$summary.hyperpar)
+
+# Bind the rows and keep the model names
+summary_table.predictors <- rbind(model1.predictors, model2.predictors)
+summary_table.params <- rbind(model1.params, model2.params)
+```
+
+### Comment on the differences across the estimates of the models:
+
+Note: it says id and id1 since I used rbind(), and it cannot have duplicate keys in the internal function, thus it renamed it to id1. They mean the same, id and id1
+
+The precision for id and id2 for both the models is really similar, although the standard-deviation of the non informative priors is pretty high. Choosing a uniform distribution prior leads to giving equal probability of occurrence to each data-point. Although, we have a "weakly" informative prior, the results of estimates didn't differ as much to the non informative priors. The 97.5th percentile is also higher for the model with non informative prior than that of the "weakly" informative prior leading to a higher variance/sd in non-informative model. To sum up, the estimates remain similar across both the models, although the mean estimates for the model with non-informative priors are slightly higher than that of the "weakly" informative priors.
+
+## Question 1.3:
+
+For each model, create maps of the random effects (both iid and rw2d), the predicted counts per cell along
+with the lower and upper limits of the 95% credible interval of predicted counts. Interpret the output.
+
+```{r}
+
+grid$respa.weak <- res.weak$summary.random$id[grid$id, "mean"]
+grid$respa.non.inform <- res.non.inform$summary.random$id[grid$id, "mean"]
+
+grid$reiid.weak <- res.weak$summary.random$id2[, "mean"]
+grid$reiid.non.inform <- res.non.inform$summary.random$id2[, "mean"]
+```
+
+### Graphing Model 1 Random Effects and Spatial Effects - Weakly Informative Prior
+
+```{r}
+tm_shape(grid) +
+  tm_polygons(col = c("respa.weak", "reiid.weak"), style = "cont", border.col = "transparent")  +
+  tm_shape(gridborder) + tm_borders() +
+  tm_facets(ncol = 2) + tm_legend(legend.position = c("left", "bottom"))
+```
+
+### Graphing Model 2 Random and Spatial Effects - Non Informative Prior
+
+```{r}
+tm_shape(grid) +
+  tm_polygons(col = c("respa.non.inform", "reiid.non.inform"), style = "cont", border.col = "transparent")  +
+  tm_shape(gridborder) + tm_borders() +
+  tm_facets(ncol = 2) + tm_legend(legend.position = c("left", "bottom"))
+```
+```{r}
+cellarea <- resolution*resolution
+
+grid$NE.weak <- res.weak$summary.fitted.values[, "mean"] * cellarea
+grid$LL.weak <- res.weak$summary.fitted.values[, "0.025quant"] * cellarea
+grid$UL.weak <- res.weak$summary.fitted.values[, "0.975quant"] * cellarea
+
+grid$NE.non.inform <- res.non.inform$summary.fitted.values[, "mean"] * cellarea
+grid$LL.non.inform <- res.non.inform$summary.fitted.values[, "0.025quant"] * cellarea
+grid$UL.non.inform <- res.non.inform$summary.fitted.values[, "0.975quant"] * cellarea
+```
+
+### Graphing Model 1 Expected and 95% Intervals - Weakly Informative Prior
+
+```{r}
+tm_shape(grid) +
+  tm_polygons(col = c("NE.weak", "LL.weak", "UL.weak"),
+              style = 'fixed', border.col = "transparent",
+              breaks = c(0, 10, 50, 100, ceiling(max(grid$UL.weak)))) +
+  tm_shape(gridborder) + tm_borders() +
+  tm_facets(ncol = 3) + tm_legend(legend.position = c("left", "bottom"))
+```
+
+### Graphing Model 2 Expected and 95% Intervals - Non Informative Prior
+
+```{r}
+tm_shape(grid) +
+  tm_polygons(col = c("NE.non.inform", "LL.non.inform", "UL.non.inform"),
+              style = 'fixed', border.col = "transparent",
+              breaks = c(0, 10, 50, 100, ceiling(max(grid$UL.non.inform)))) +
+  tm_shape(gridborder) + tm_borders() +
+  tm_facets(ncol = 3) + tm_legend(legend.position = c("left", "bottom"))
+```
+### Interpret the output:
+
+Given the comment in the previous question, it appears quite obvious that the Upper Limit for the model with non informative priors will be higher than that of the "weakly" informative priors. Although the regions are similarly predicted, with the concentration of higher and lower values being the same across both the models, leading to very similar distribution of estimates. Besides this, the models are similar in prediction. The lower and upper and limits have a similar concentration for higher and lower values.
+
+# Question 2:
+
+## Question 2.1:
+
+For the lung cancer in Pennsylvania data set, fit the following five models in INLA using the default priors:
+• Complete pooling and smoking covariate (no random effects)
+• Hierarchical random effect (iid) - (intercept only)
+• Hierarchical random effect (iid) + smoking covariate
+• Spatial + iid random effect
+• Spatial + iid random effect + smoking covariate
+
+
+```{r}
+data(pennLC)
+population <- pennLC$data$population
+cases <- pennLC$data$cases
+n.strata <- 16
+E <- expected(population, cases, n.strata)
+d <- aggregate(x = pennLC$data$cases, by = list(county = pennLC$data$county), FUN = sum)
+population_count <- aggregate(x = pennLC$data$population, by = list(county = pennLC$data$county), FUN = sum)
+
+
+
+# from spatial polygon to simple feature
+pennLC.sf <- st_as_sf(pennLC$spatial.polygon)
+pennLC.sf$county <- d$county
+pennLC.sf$counts <- d$x
+pennLC.sf$E <- E[match(pennLC.sf$county, unique(pennLC$data$county))]
+pennLC.sf <- merge(pennLC.sf, pennLC$smoking, by.x = "county", by.y = "county")
+pennLC.sf <- pennLC.sf%>%
+  mutate(SIR = counts/E)
+pennLC.sf$population <- population_count$x
+```
+
+
+```{r}
+tm_shape(pennLC.sf) + tm_polygons(c("counts", "E", "smoking", "SIR")) +
+  tm_facets(ncol = 2)
+```
+
+
+```{r}
+## Values of E_i and neighborhood structure
+E.penn <- pennLC.sf$E
+pop.penn <- pennLC.sf$population
+neighbor.penn <- poly2nb(pennLC.sf)
+
+nb2INLA("npenn.adj", neighbor.penn)
+g <- inla.read.graph(filename = "npenn.adj")
+
+pennLC.sf$re_u <- 1:nrow(pennLC.sf)
+pennLC.sf$re_v <- 1:nrow(pennLC.sf)
+
+# Complete pooling and smoking covariate
+formula1 <- counts ~ smoking
+
+res1 <- inla(formula1, family = "poisson", data = pennLC.sf, E = E.penn,
+            control.predictor = list(compute = TRUE), 
+            control.fixed = list(mean.intercept = 0, 
+                                 prec.intercept = 1, 
+                                 mean = 0, 
+                                 prec = 1), 
+            control.compute=list(cpo = TRUE, dic = TRUE, waic = TRUE))
+
+# Hierarchical random effect (iid) - (intercept only)
+formula2 <- counts ~ f(re_v, model = "iid", 
+                       hyper = list(prec = list(prior = "loggamma", 
+                                                param = c(0.1,  0.1))))
+
+res2 <- inla(formula2, family = "poisson", data = pennLC.sf, E = E.penn,
+            control.predictor = list(compute = TRUE), 
+            control.fixed = list(mean.intercept = 0, 
+                                 prec.intercept = 1, 
+                                 mean = 0, 
+                                 prec = 1), 
+            control.compute=list(cpo = TRUE, dic = TRUE, waic = TRUE))
+
+# Hierarchical random effect (iid) + smoking covariate
+formula3 <- counts ~ smoking + 
+  f(re_v, model = "iid", 
+    hyper = list(prec = list(prior = "loggamma",param = c(0.1,  0.1))))
+
+res3 <- inla(formula3, family = "poisson", data = pennLC.sf, E = E.penn,
+            control.predictor = list(compute = TRUE), 
+            control.fixed = list(mean.intercept = 0, 
+                                 prec.intercept = 1, 
+                                 mean = 0, 
+                                 prec = 1), 
+            control.compute=list(cpo = TRUE, dic = TRUE, waic = TRUE))
+
+# Spatial + iid random effect
+formula4 <- counts ~ f(re_u, model = "besag", graph = g, 
+                       hyper = list(prec = list(prior = "loggamma",
+                                                param = c(0.1,  0.1)))) + 
+  f(re_v, model = "iid", 
+    hyper = list(prec = list(prior = "loggamma",param = c(0.1,  0.1))))
+
+res4 <- inla(formula4, family = "poisson", data = pennLC.sf, E = E.penn,
+            control.predictor = list(compute = TRUE), 
+            control.fixed = list(mean.intercept = 0, 
+                                 prec.intercept = 1, 
+                                 mean = 0, 
+                                 prec = 1), 
+            control.compute=list(cpo = TRUE, dic = TRUE, waic = TRUE))
+
+# Spatial + iid random effect + smoking covariate
+formula5 <- counts ~ smoking + 
+  f(re_u, model = "besag", graph = g, 
+    hyper = list(prec = list(prior = "loggamma",param = c(0.1,  0.1)))) + 
+  f(re_v, model = "iid", 
+    hyper = list(prec = list(prior = "loggamma",param = c(0.1,  0.1))))
+
+res5 <- inla(formula5, family = "poisson", data = pennLC.sf, E = E.penn,
+            control.predictor = list(compute = TRUE), 
+            control.fixed = list(mean.intercept = 0, 
+                                 prec.intercept = 1, 
+                                 mean = 0, 
+                                 prec = 1), 
+            control.compute=list(cpo = TRUE, dic = TRUE, waic = TRUE))
+```
+
+Computing the Prevalence Rates using the count outcome variable.
+```{r}
+pennLC.sf$model1.predicted_prevalence <- (res1$summary.fitted.values[,"mean"]*E.penn)
+pennLC.sf$model1.sd.predicted_prevalence <- (res1$summary.fitted.values[,"sd"]*E.penn)
+pennLC.sf$model2.mean.predicted_prevalence <- (res2$summary.fitted.values[,"mean"]*E.penn) 
+pennLC.sf$model2.sd.predicted_prevalence <- (res2$summary.fitted.values[,"sd"]*E.penn) 
+pennLC.sf$model3.mean.predicted_prevalence <- (res3$summary.fitted.values[,"mean"]*E.penn) 
+pennLC.sf$model3.sd.predicted_prevalence <- (res3$summary.fitted.values[,"sd"]*E.penn) 
+pennLC.sf$model4.mean.predicted_prevalence <- (res4$summary.fitted.values[,"mean"]*E.penn) 
+pennLC.sf$model4.sd.predicted_prevalence <- (res4$summary.fitted.values[,"sd"]*E.penn) 
+pennLC.sf$model5.mean.predicted_prevalence <- (res5$summary.fitted.values[,"mean"]*E.penn) 
+pennLC.sf$model5.sd.predicted_prevalence <- (res5$summary.fitted.values[,"sd"]*E.penn) 
+```
+
+```{r}
+res1.m1.mean <- tm_shape(pennLC.sf) + 
+  tm_polygons("model1.predicted_prevalence") + 
+  tm_layout(main.title = "Predicted Prevalence Rate - Model 1")
+
+res1.m1.sd <- tm_shape(pennLC.sf) + 
+  tm_polygons("model1.sd.predicted_prevalence") + 
+  tm_layout(main.title = "Standard Deviation of Predicted Prevalence Rate - Model 1")
+
+res2.m1.mean <- tm_shape(pennLC.sf) + 
+  tm_polygons("model2.mean.predicted_prevalence") + 
+  tm_layout(main.title = "Predicted Prevalence Rate - Model 2")
+
+res2.m1.sd <- tm_shape(pennLC.sf) + 
+  tm_polygons("model2.sd.predicted_prevalence") + 
+  tm_layout(main.title = "Standard Deviation of Predicted Prevalence Rate - Model 2")
+
+res3.m1.mean <- tm_shape(pennLC.sf) + 
+  tm_polygons("model3.mean.predicted_prevalence") + 
+  tm_layout(main.title = "Predicted Prevalence Rate - Model 3")
+
+res3.m1.sd <- tm_shape(pennLC.sf) + 
+  tm_polygons("model3.sd.predicted_prevalence") + 
+  tm_layout(main.title = "Standard Deviation of Predicted Prevalence Rate - Model 3")
+
+res4.m1.mean <- tm_shape(pennLC.sf) + 
+  tm_polygons("model4.mean.predicted_prevalence") + 
+  tm_layout(main.title = "Predicted Prevalence Rate - Model 4")
+
+res4.m1.sd <- tm_shape(pennLC.sf) + 
+  tm_polygons("model4.sd.predicted_prevalence") + 
+  tm_layout(main.title = "Standard Deviation of Predicted Prevalence Rate - Model 4")
+
+res5.m1.mean <- tm_shape(pennLC.sf) + 
+  tm_polygons("model5.mean.predicted_prevalence") + 
+  tm_layout(main.title = "Predicted Prevalence Rate - Model 5")
+
+res5.m1.sd <- tm_shape(pennLC.sf) + 
+  tm_polygons("model5.sd.predicted_prevalence") + 
+  tm_layout(main.title = "Standard Deviation of Predicted Prevalence Rate - Model 5")
+```
+
+```{r}
+tmap_arrange(res1.m1.mean, res1.m1.sd, ncol=1)
+```
+```{r}
+tmap_arrange(res2.m1.mean, res2.m1.sd, ncol=1)
+```
+```{r}
+tmap_arrange(res3.m1.mean, res3.m1.sd, ncol=1)
+```
+```{r}
+tmap_arrange(res4.m1.mean, res4.m1.sd, ncol=1)
+```
+```{r}
+tmap_mode("plot")
+tmap_arrange(res5.m1.mean, res5.m1.sd, ncol=1)
+```
+
+```{r}
+cpo <- list(sum(log(res1$cpo$cpo)), sum(log(res2$cpo$cpo)), sum(log(res3$cpo$cpo)), sum(log(res4$cpo$cpo)), sum(log(res5$cpo$cpo)))
+pit <- list(sum(log(res1$cpo$pit)), sum(log(res2$cpo$pit)), sum(log(res3$cpo$pit)), sum(log(res4$cpo$pit)), sum(log(res5$cpo$pit)))
+cpo.pic.df <- data.frame("Model 1" = c(cpo[[1]], pit[[1]]), "Model 2" = c(cpo[[2]], pit[[2]]), "Model 3" = c(cpo[[3]], pit[[3]]), "Model 4" = c(cpo[[4]], pit[[4]]), "Model 5" = c(cpo[[5]], pit[[5]]))
+rownames(cpo.pic.df) <- c("CPO", "PIT")
+cpo.pic.df
+```
+### Comment on major differences in predicted prevalence across the models
+
+Model 3, 4, and 5 have a broader range of predicted prevalence per color criteria, ie: the model is less complex in its prediction. Given that, the standard deviation is relatively similar in comparison of across all the models. Model 2 predicts higher in comparison to other models, and is also among the higher end of how variated the predictions are. Model 1 in comparison has a higher variance in prediction in higher end of expected predicted prevalence. Across all the models, the variance / standard deviation is high among the high prevalence predicted values. This high variance propagated to nearby areas of high prevalence across all the models.
+
+## Question 2.2:
+
+```{r}
+# Add model names to each data frame
+model1.predictors <- cbind(Model = "Model 1", res1$summary.fixed[c("mean", "0.025quant", "0.975quant")])
+model2.predictors <- cbind(Model = "Model 2", res2$summary.fixed[c("mean", "0.025quant", "0.975quant")])
+model3.predictors <- cbind(Model = "Model 3", res3$summary.fixed[c("mean", "0.025quant", "0.975quant")])
+model4.predictors <- cbind(Model = "Model 4", res4$summary.fixed[c("mean", "0.025quant", "0.975quant")])
+model5.predictors <- cbind(Model = "Model 5", res5$summary.fixed[c("mean", "0.025quant", "0.975quant")])
+
+summary_table.predictors <- rbind(model1.predictors, model2.predictors, model3.predictors, model4.predictors, model5.predictors)
+```
+
+### Histogram for the PIT Values for each Model:
+
+```{r}
+hist(res1$cpo$cpo, 
+     main="Histogram for PIT Values - Model 1", 
+     xlab = "PIT Values", 
+     xlim=c(0, max(res1$cpo$cpo)))
+```
+
+```{r}
+hist(res2$cpo$cpo, 
+     main="Histogram for PIT Values - Model 2", 
+     xlab = "PIT Values", 
+     xlim=c(0, max(res2$cpo$cpo)))
+```
+
+```{r}
+hist(res3$cpo$cpo, 
+     main="Histogram for PIT Values - Model 3", 
+     xlab = "PIT Values", 
+     xlim=c(0, max(res3$cpo$cpo)))
+```
+
+```{r}
+hist(res4$cpo$cpo, 
+     main="Histogram for PIT Values - Model 4", 
+     xlab = "PIT Values", 
+     xlim=c(0, max(res4$cpo$cpo)))
+```
+
+```{r}
+hist(res5$cpo$cpo, 
+     main="Histogram for PIT Values - Model 5", 
+     xlab = "PIT Values", 
+     xlim=c(0, max(res5$cpo$cpo)))
+```
+
+### Comment on Which model has the best relative predictive performance as measured by SUM(log(CPO))? What does the histogram of PIT values tell you?
+
+For the histogram of PIT values, we can determine how good is a model depending how skewed the histogram is on either side. If the model is overconfident or under confident, the model will be on the either side. Model 2 appears as the best model given the how relatively more evenly distributed the data is compared to the other models.
+
+The SUM(log(CPO)) is the num of logarithms of the CPO values that measures the predictive accuracy of a particular model. If the SUM is close to 0, then the model has better predictions. Model 2 is closest, however less compared to the other in terms of distance from 0, Model 2 is the best model according to the SUM(log(CPO)).
+
+# Question 3:
+
+```{r}
+library(blockCV)
+data(gambia)
+## aggregate by location and convert the object into a 'sf' object
+
+d.gambia <- group_by(gambia, x, y) %>% 
+  summarize(total = n(), 
+            positive = sum(pos), 
+            prev = positive / total)
+
+sps <- SpatialPoints(d.gambia[, c("x", "y")], 
+                     proj4string = CRS("+proj=utm +zone=28"))
+
+spst <- spTransform(sps, CRS("+proj=longlat +datum=WGS84"))
+
+d.gambia[,c("long", "lat")] <- spst@coords
+
+r.gambia <- getData(name = "alt", country = "GMB", mask = TRUE)
+
+d.gambia$alt <- raster::extract(r.gambia, d.gambia[, c("long", "lat")])
+
+gambia.sf <- st_as_sf(d.gambia, coords = c("long", "lat"), crs = "+proj=longlat +datum=WGS84")
+
+sc <- cv_cluster(x = gambia.sf, 
+                 column = "y", 
+                 k = 4)
+
+# now plot the created folds
+cv_plot(cv = sc, # a blockCV object
+         x = gambia.sf, # sample points
+         r = r.gambia, # optionally add a raster background
+         points_alpha = 0.5,
+         ncol = 2,
+         nrow = 2)
+```
+```{r}
+# spatial blocking by specified range and random assignment
+sb <- cv_spatial(x = gambia.sf, # sf or SpatialPoints of sample data (e.g. species data)
+                 column = "y", # the response column (binary or multi-class)
+                 k = 4, # number of folds
+                 iteration = 10, # to find evenly dispersed folds
+                 seed = 10) # also create folds for biomod2
+
+```
+
+```{r}
+df.matrix <- matrix(ncol = sb$k)
+
+for (k in 1:sb$k) {
+  
+  d.gambia.subset <- subset(d.gambia, rownames(d.gambia) == as.character(unique(sb$folds_list[[k]][[2]])))
+  
+  sps.gambia <- SpatialPoints(d.gambia.subset[, c("x", "y")], proj4string = CRS("+proj=utm +zone=28"))
+  
+  spst.gambia <- spTransform(sps.gambia, CRS("+proj=longlat +datum=WGS84"))
+  
+  d.gambia.subset[,c("long", "lat")] <- spst.gambia@coords
+  
+  r.gambia <- getData(name = "alt", country = "GMB", mask = TRUE)
+  
+  d.gambia.subset$alt <- raster::extract(r.gambia, d.gambia.subset[, c("long", "lat")])
+  
+  gambia.sf.subset <- st_as_sf(d.gambia.subset, coords = c("long", "lat"), crs = "+proj=longlat +datum=WGS84")
+  
+  # Mesh construction
+  coo <- cbind(d.gambia.subset$long, d.gambia.subset$lat)
+  mesh <- inla.mesh.2d(loc = coo, max.edge = c(0.1, 5), cutoff = 0.01)
+
+  # We'll change the spde depending on what we want to fit
+  #Exponential
+  spde.exponential <- inla.spde2.matern(mesh = mesh, alpha = 3/2, constr = TRUE)
+  
+  indexs.gambia <- inla.spde.make.index("s", spde.exponential$n.spde)
+  
+  A.gambia <- inla.spde.make.A(mesh = mesh, loc = coo)
+  
+  ## Prediction data
+  dp.gambia <- rasterToPoints(r.gambia)
+  ra.gambia <- aggregate(r.gambia, fact = 5, fun = mean)
+  dp.gambia <- rasterToPoints(ra.gambia)
+  coop <- dp.gambia[, c("x", "y")]
+  Ap.gambia <- inla.spde.make.A(mesh = mesh, loc = coop)
+  
+  # stack for estimation stk.e
+  stk.e <- inla.stack(tag = "est", 
+                      data = list(y = d.gambia.subset$positive, numtrials = d.gambia.subset$total), 
+                      A = list(1, A.gambia), 
+                      effects = list(data.frame(b0 = 1, altitude = d.gambia.subset$alt), 
+                                     s = indexs.gambia))
+  
+  # stack for prediction stk.p
+  stk.p <- inla.stack(tag = "pred", 
+                      data = list(y = NA, numtrials = NA), 
+                      A = list(1, Ap.gambia), 
+                      effects = list(data.frame(b0 = 1, altitude = dp.gambia[, 3]), s = indexs.gambia))
+  
+  # stk.full has stk.e and stk.p
+  stk.full <- inla.stack(stk.e, stk.p)
+  
+  formula.exponential <- y ~ 0 + b0 + altitude + f(s, model = spde.exponential)
+  
+  res.exponential <- inla(formula.exponential, family = "binomial", 
+              Ntrials = numtrials, 
+              control.family = list(link = "logit"), 
+              data = inla.stack.data(stk.full),
+              control.predictor = list(compute = TRUE, link = 1, A = inla.stack.A(stk.full)), 
+              control.compute = list(config = TRUE, return.marginals.predictor = TRUE),
+              control.inla = list(int.strategy = 'eb'))
+  
+  index <- inla.stack.index(stk.full, tag = "pred")$data
+  
+  pred_mean <- res.exponential$summary.fitted.values[index, "mean"]
+  pred_ll <- res.exponential$summary.fitted.values[index, "0.025quant"]
+  pred_ul <- res.exponential$summary.fitted.values[index, "0.975quant"]
+  
+  maps_df <- data.frame(
+      long = coop[, 1], lat = coop[, 2],
+      mean_pred = pred_mean,
+      pred_lower = pred_ll,
+      pred_ul = pred_ul
+    )
+  
+  point.estimate <- mean(d.gambia$prev)
+  mse <- sum(point.estimate - maps_df$mean_pred) / length(maps_df)
+  
+  message <- paste0("Fold number: ", k, " The value of Mean Squared Error is: ", mse)
+  print(message)
+}
+```
+
+
+
+

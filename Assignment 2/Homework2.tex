@@ -1,0 +1,1249 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Homework 2 - Divij Sanjanwala},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Homework 2 - Divij Sanjanwala}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# R packages }
+\FunctionTok{setwd}\NormalTok{(}\FunctionTok{getwd}\NormalTok{())}
+\FunctionTok{library}\NormalTok{(SpatialEpi)}
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(sf)}
+\FunctionTok{library}\NormalTok{(spdep)}
+\FunctionTok{library}\NormalTok{(rmarkdown)}
+\FunctionTok{library}\NormalTok{(INLA)}
+\FunctionTok{library}\NormalTok{(tmap) }\DocumentationTok{\#\# Very commonly used {-}{-} to make static and interactive plots}
+\FunctionTok{library}\NormalTok{(mapview)}
+\FunctionTok{library}\NormalTok{(cowplot)}
+\FunctionTok{library}\NormalTok{(reshape2)}
+\FunctionTok{library}\NormalTok{(leaflet)}
+\FunctionTok{library}\NormalTok{(raster)}
+\FunctionTok{library}\NormalTok{(shiny)}
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(spDataLarge) }\DocumentationTok{\#\# Data sets {-}{-} use commands in notes to download}
+\FunctionTok{library}\NormalTok{(spData) }\DocumentationTok{\#\# Data sets}
+\FunctionTok{library}\NormalTok{(sf) }\DocumentationTok{\#\# simple features }
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-1.1}{%
+\section{Question 1.1:}\label{question-1.1}}
+
+\hypertarget{for-the-three-following-sets-of-prior-distributions-generate-20-data-sets-from-the-respective-prior-predictive-distribution.}{%
+\subsection{For the three following sets of prior distributions,
+generate 20 data sets from the respective prior predictive
+distribution.}\label{for-the-three-following-sets-of-prior-distributions-generate-20-data-sets-from-the-respective-prior-predictive-distribution.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\CommentTok{\# Setting the values of the parameters}
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\NormalTok{beta0 }\OtherTok{\textless{}{-}} \DecValTok{1}
+\NormalTok{beta1 }\OtherTok{\textless{}{-}} \FloatTok{0.5}
+\NormalTok{sigma }\OtherTok{\textless{}{-}} \DecValTok{1}
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\CommentTok{\# Simulating covariate values + data}
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{17}\NormalTok{)}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\AttributeTok{n =} \DecValTok{100}\NormalTok{, }\AttributeTok{min =} \DecValTok{1}\NormalTok{, }\AttributeTok{max=}\DecValTok{5}\NormalTok{)}
+\NormalTok{y.mean }\OtherTok{\textless{}{-}}\NormalTok{ beta0 }\SpecialCharTok{+}\NormalTok{ beta1}\SpecialCharTok{*}\NormalTok{x}
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n =} \DecValTok{100}\NormalTok{, }
+           \AttributeTok{mean =}\NormalTok{ y.mean, }
+           \AttributeTok{sd =}\NormalTok{ sigma)}
+\NormalTok{sim.data }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(x,y, y.mean)}
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Simulation for prior distribution candidate: \[\begin{equation}
+  \beta_0 \sim N\left(0, \sigma_{\beta_0}=1\right), \beta_1 \sim N\left(0, \sigma_{\beta_1}=1\right), \sigma \sim \text { Gamma }(\text { shape }=1, \text { scale }=1)
+  \end{equation}\]
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{17}\NormalTok{)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{100}
+
+\NormalTok{sigma }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{shape =} \DecValTok{1}\NormalTok{, }\AttributeTok{scale =} \DecValTok{1}\NormalTok{)}
+\NormalTok{beta0 }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1}\NormalTok{)}
+\NormalTok{beta1 }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1}\NormalTok{)}
+
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\AttributeTok{n =} \DecValTok{100}\NormalTok{, }\AttributeTok{min =} \DecValTok{1}\NormalTok{, }\AttributeTok{max=}\DecValTok{5}\NormalTok{)}
+\NormalTok{y.mean }\OtherTok{\textless{}{-}}\NormalTok{ beta0 }\SpecialCharTok{+}\NormalTok{ beta1}\SpecialCharTok{*}\NormalTok{x}
+
+\NormalTok{sim.data20\_1 }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}\AttributeTok{x =} \FunctionTok{rep}\NormalTok{(x, }\DecValTok{20}\NormalTok{), }
+              \AttributeTok{y.mean =} \FunctionTok{rep}\NormalTok{(y.mean, }\DecValTok{20}\NormalTok{), }
+              \AttributeTok{y.sim =} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n =} \DecValTok{20}\SpecialCharTok{*}\DecValTok{100}\NormalTok{, }
+                            \AttributeTok{mean =}\NormalTok{ y.mean, }
+                            \AttributeTok{sd =}\NormalTok{ sigma), }
+              \AttributeTok{group =} \FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{20}\NormalTok{, }\AttributeTok{each =} \DecValTok{100}\NormalTok{))}
+
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ sim.data20\_1, }\FunctionTok{aes}\NormalTok{(x,y.sim)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(x,y.mean), }\AttributeTok{col=}\StringTok{"blue"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Simulated Data"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{group) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{beta0\_1 }\OtherTok{=} \FunctionTok{mean}\NormalTok{(}\FunctionTok{dnorm}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\NormalTok{beta1\_1 }\OtherTok{=} \FunctionTok{mean}\NormalTok{(}\FunctionTok{dnorm}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\NormalTok{sigma\_1 }\OtherTok{=} \FunctionTok{mean}\NormalTok{(}\FunctionTok{dgamma}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+
+\FunctionTok{ggplot}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{bx =} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{12}\NormalTok{, }\DecValTok{12}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{100}\NormalTok{)), }\FunctionTok{aes}\NormalTok{(bx)) }\SpecialCharTok{+}
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dnorm, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"Beta\_0"}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dnorm, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"Beta\_1"}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dgamma, }\AttributeTok{args=}\FunctionTok{list}\NormalTok{(}\AttributeTok{shape =} \DecValTok{1}\NormalTok{, }\AttributeTok{scale =}\DecValTok{1}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"Sigma"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ beta0\_1, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ beta1\_1, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"blue"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ sigma\_1, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"green"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"density"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"x"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{scale\_color\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"red"}\NormalTok{, }\StringTok{"blue"}\NormalTok{, }\StringTok{"green"}\NormalTok{), }
+                     \AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Beta\_0"}\NormalTok{, }\StringTok{"Beta\_1"}\NormalTok{, }\StringTok{"Sigma"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Prior distributions for Beta\_0, Beta\_1, and Sigma"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"Prior Value"}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{"Density"}\NormalTok{,}
+       \AttributeTok{color =} \StringTok{"Priors"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  Simulation for prior distribution candidate: \[\begin{equation}
+  \beta_0 \sim N\left(0, \sigma_{\beta_0}=1000\right), \beta_1 \sim N\left(0, \sigma_{\beta_1}=1000\right), \sigma \sim \text { Gamma }(\text {shape}=1000, \text {scale}=1000)
+  \end{equation}\]
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{17}\NormalTok{)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{100}
+
+\NormalTok{sigma }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{shape =} \DecValTok{1000}\NormalTok{, }\AttributeTok{scale =} \DecValTok{1000}\NormalTok{)}
+\NormalTok{beta0 }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1000}\NormalTok{)}
+\NormalTok{beta1 }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1000}\NormalTok{)}
+
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\AttributeTok{n =} \DecValTok{100}\NormalTok{, }\AttributeTok{min =} \DecValTok{1}\NormalTok{, }\AttributeTok{max=}\DecValTok{5}\NormalTok{)}
+\NormalTok{y.mean }\OtherTok{\textless{}{-}}\NormalTok{ beta0 }\SpecialCharTok{+}\NormalTok{ beta1}\SpecialCharTok{*}\NormalTok{x}
+
+\NormalTok{sim.data20\_2 }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}\AttributeTok{x =} \FunctionTok{rep}\NormalTok{(x, }\DecValTok{20}\NormalTok{), }
+                       \AttributeTok{y.mean =} \FunctionTok{rep}\NormalTok{(y.mean, }\DecValTok{20}\NormalTok{), }
+                       \AttributeTok{y.sim =} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n =} \DecValTok{20}\SpecialCharTok{*}\DecValTok{100}\NormalTok{, }\AttributeTok{mean =}\NormalTok{ y.mean, }\AttributeTok{sd =}\NormalTok{ sigma), }
+                       \AttributeTok{group =} \FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{20}\NormalTok{, }\AttributeTok{each =} \DecValTok{100}\NormalTok{))}
+
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ sim.data20\_2, }\FunctionTok{aes}\NormalTok{(x,y.sim)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(x,y.mean), }\AttributeTok{col=}\StringTok{"blue"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Simulated Data"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{group) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{beta0\_2 }\OtherTok{=} \FunctionTok{mean}\NormalTok{(}\FunctionTok{dnorm}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1000}\NormalTok{))}
+\NormalTok{beta1\_2 }\OtherTok{=} \FunctionTok{mean}\NormalTok{(}\FunctionTok{dnorm}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1000}\NormalTok{))}
+\NormalTok{sigma\_2 }\OtherTok{=} \FunctionTok{mean}\NormalTok{(}\FunctionTok{dgamma}\NormalTok{(}\DecValTok{1000}\NormalTok{, }\DecValTok{1000}\NormalTok{))}
+
+\FunctionTok{ggplot}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{bx =} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{100000}\NormalTok{, }\DecValTok{100000}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{100}\NormalTok{)), }\FunctionTok{aes}\NormalTok{(bx)) }\SpecialCharTok{+}
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dnorm, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1000}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"Beta\_0"}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dnorm, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1000}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"Beta\_1"}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dgamma, }\AttributeTok{args=}\FunctionTok{list}\NormalTok{(}\AttributeTok{shape =} \DecValTok{1000}\NormalTok{, }\AttributeTok{scale =}\DecValTok{1000}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"Sigma"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ beta0\_2, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ beta1\_2, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"blue"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ sigma\_2, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"green"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"density"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"x"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{scale\_color\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"red"}\NormalTok{, }\StringTok{"blue"}\NormalTok{, }\StringTok{"green"}\NormalTok{), }
+                     \AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Beta\_0"}\NormalTok{, }\StringTok{"Beta\_1"}\NormalTok{, }\StringTok{"Sigma"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Prior distributions for Beta\_0, Beta\_1, and Sigma"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"Prior Value"}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{"Density"}\NormalTok{,}
+       \AttributeTok{color =} \StringTok{"Priors"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  Simulation for prior distribution candidate: \[\begin{equation}
+  \beta_0 \sim Unif\left(0, 1\right), \beta_1 \sim Unif\left(-1, 0\right), \sigma \sim \text { Exp }(1)
+  \end{equation}\]
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{17}\NormalTok{)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{100}
+\NormalTok{data\_sets }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{()}
+
+\NormalTok{sigma }\OtherTok{\textless{}{-}} \FunctionTok{rexp}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{rate =} \DecValTok{1}\NormalTok{)}
+\NormalTok{beta0 }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{min =} \DecValTok{0}\NormalTok{, }\AttributeTok{max =} \DecValTok{1}\NormalTok{)}
+\NormalTok{beta1 }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{min =} \SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\AttributeTok{max =} \DecValTok{0}\NormalTok{)}
+  
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\AttributeTok{n =} \DecValTok{100}\NormalTok{, }\AttributeTok{min =} \DecValTok{1}\NormalTok{, }\AttributeTok{max=}\DecValTok{5}\NormalTok{)}
+\NormalTok{y.mean }\OtherTok{\textless{}{-}}\NormalTok{ beta0 }\SpecialCharTok{+}\NormalTok{ beta1}\SpecialCharTok{*}\NormalTok{x}
+
+\NormalTok{sim.data20\_3 }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}\AttributeTok{x =} \FunctionTok{rep}\NormalTok{(x, }\DecValTok{20}\NormalTok{), }
+              \AttributeTok{y.mean =} \FunctionTok{rep}\NormalTok{(y.mean, }\DecValTok{20}\NormalTok{), }
+              \AttributeTok{y.sim =} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n =} \DecValTok{20}\SpecialCharTok{*}\DecValTok{100}\NormalTok{, }
+                            \AttributeTok{mean =}\NormalTok{ y.mean, }
+                            \AttributeTok{sd =}\NormalTok{ sigma), }
+              \AttributeTok{group =} \FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{20}\NormalTok{, }\AttributeTok{each =} \DecValTok{100}\NormalTok{))}
+
+
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ sim.data20\_3, }\FunctionTok{aes}\NormalTok{(x,y.sim)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(x,y.mean), }\AttributeTok{col=}\StringTok{"blue"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Simulated Data"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{group) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{beta0\_3 }\OtherTok{=} \FunctionTok{mean}\NormalTok{(}\FunctionTok{dunif}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\NormalTok{beta1\_3 }\OtherTok{=} \FunctionTok{mean}\NormalTok{(}\FunctionTok{dunif}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{))}
+\NormalTok{sigma\_3 }\OtherTok{=} \FunctionTok{mean}\NormalTok{(}\FunctionTok{dexp}\NormalTok{(}\DecValTok{1}\NormalTok{))}
+
+\FunctionTok{ggplot}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{bx =} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{12}\NormalTok{, }\DecValTok{12}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{100}\NormalTok{)), }\FunctionTok{aes}\NormalTok{(bx)) }\SpecialCharTok{+}
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dunif, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{min =} \DecValTok{0}\NormalTok{, }\AttributeTok{max =} \DecValTok{1}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"Beta\_0"}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dunif, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{min =} \SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\AttributeTok{max =} \DecValTok{0}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"Beta\_1"}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dexp, }\AttributeTok{args=}\FunctionTok{list}\NormalTok{(}\AttributeTok{rate =} \DecValTok{1}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"Sigma"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ beta0\_3, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ beta1\_3, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"blue"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ sigma\_3, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"green"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"density"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"x"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{scale\_color\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"red"}\NormalTok{, }\StringTok{"blue"}\NormalTok{, }\StringTok{"green"}\NormalTok{), }
+                     \AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Beta\_0"}\NormalTok{, }\StringTok{"Beta\_1"}\NormalTok{, }\StringTok{"Sigma"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Prior distributions for Beta\_0, Beta\_1, and Sigma"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"Prior Value"}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{"Density"}\NormalTok{,}
+       \AttributeTok{color =} \StringTok{"Priors"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-8-1.pdf} The
+best choice of the betas and sigma combinations would be to consider:
+
+\[\begin{equation}
+\beta_0 \sim N\left(0, \sigma_{\beta_0}=1\right), \beta_1 \sim N\left(0, \sigma_{\beta_1}=1\right), \sigma \sim \text { Gamma }(\text { shape }=1, \text { scale }=1)
+\end{equation}\]
+
+This is because, simulated plots seem to uniformly fit the mean line and
+have a clear pattern across the datasets. Considering the density plots
+as well, they appear to be close to the true value of the mean. This
+translates into effective simulations. \# Question 1.2:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\CommentTok{\# Setting the values of the parameters}
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{17}\NormalTok{)}
+\NormalTok{nu.mu }\OtherTok{\textless{}{-}} \DecValTok{2}
+\NormalTok{tau.mu }\OtherTok{\textless{}{-}} \FloatTok{0.5}
+\NormalTok{nu.beta }\OtherTok{\textless{}{-}} \SpecialCharTok{{-}}\DecValTok{1}
+\NormalTok{tau.beta }\OtherTok{\textless{}{-}} \FloatTok{0.5}
+\NormalTok{mu.hm }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n=}\DecValTok{20}\NormalTok{, }\AttributeTok{mean =}\NormalTok{ nu.mu, }\AttributeTok{sd=}\NormalTok{tau.mu)}
+\NormalTok{beta.hm }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n=}\DecValTok{20}\NormalTok{, }\AttributeTok{mean =}\NormalTok{ nu.beta, }\AttributeTok{sd=}\NormalTok{ tau.beta)}
+\NormalTok{sigma }\OtherTok{\textless{}{-}} \DecValTok{1}
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\CommentTok{\# Simulating covariate values + data}
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\NormalTok{x.hm }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\AttributeTok{n =} \DecValTok{100}\NormalTok{, }\AttributeTok{min =} \DecValTok{1}\NormalTok{, }\AttributeTok{max=}\DecValTok{5}\NormalTok{)}
+\NormalTok{y.mean.hier }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FunctionTok{rep}\NormalTok{(mu.hm, }\AttributeTok{each =} \DecValTok{100}\NormalTok{) }\SpecialCharTok{+} 
+                   \FunctionTok{rep}\NormalTok{(beta.hm, }\AttributeTok{each =} \DecValTok{100}\NormalTok{)}\SpecialCharTok{*}\FunctionTok{rep}\NormalTok{(x.hm, }\DecValTok{20}\NormalTok{))}
+
+\NormalTok{y.hier }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n =} \DecValTok{20}\SpecialCharTok{*}\DecValTok{100}\NormalTok{, }\AttributeTok{mean =}\NormalTok{ y.mean.hier, sigma)}
+\NormalTok{sim.data.hier }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}\AttributeTok{x =} \FunctionTok{rep}\NormalTok{(x.hm, }\DecValTok{20}\NormalTok{), }
+\NormalTok{                        y.hier, y.mean.hier, }
+                        \AttributeTok{group =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Group"}\NormalTok{, }\FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{20}\NormalTok{, }\AttributeTok{each =} \DecValTok{100}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Simulation for prior distribution candidate:
+\end{itemize}
+
+\[
+\begin{aligned}
+& \nu_\mu \sim N(0,1), \nu_\beta \sim N(0,1), \tau_\mu \sim \text { Gamma }(\text { shape }=1, \text { scale }=1), \tau_\beta \sim \text { Gamma }(\text { shape }=1, \text { scale }= \\
+& 1), \sigma \sim \text { Gamma }(\text { shape }=1, \text { scale }=1)
+\end{aligned}
+\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\CommentTok{\# Setting the values of the parameters}
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{17}\NormalTok{)}
+\NormalTok{nu.mu }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd=}\DecValTok{1}\NormalTok{)}
+\NormalTok{tau.mu }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{shape=}\DecValTok{1}\NormalTok{, }\AttributeTok{scale=}\DecValTok{1}\NormalTok{)}
+\NormalTok{nu.beta }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd=}\DecValTok{1}\NormalTok{)}
+\NormalTok{tau.beta }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{shape=}\DecValTok{1}\NormalTok{, }\AttributeTok{scale=}\DecValTok{1}\NormalTok{)}
+\NormalTok{mu.hm }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n=}\DecValTok{20}\NormalTok{, }\AttributeTok{mean =}\NormalTok{ nu.mu, }\AttributeTok{sd=}\NormalTok{tau.mu)}
+\NormalTok{beta.hm }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n=}\DecValTok{20}\NormalTok{, }\AttributeTok{mean =}\NormalTok{ nu.beta, }\AttributeTok{sd=}\NormalTok{ tau.beta)}
+\NormalTok{sigma }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{shape=}\DecValTok{1}\NormalTok{, }\AttributeTok{scale=}\DecValTok{1}\NormalTok{)}
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\CommentTok{\# Simulating covariate values + data}
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\NormalTok{x.hm }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\AttributeTok{n =} \DecValTok{100}\NormalTok{, }\AttributeTok{min =} \DecValTok{1}\NormalTok{, }\AttributeTok{max=}\DecValTok{5}\NormalTok{)}
+\NormalTok{y.mean.hier }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FunctionTok{rep}\NormalTok{(mu.hm, }\AttributeTok{each =} \DecValTok{100}\NormalTok{) }\SpecialCharTok{+} 
+                   \FunctionTok{rep}\NormalTok{(beta.hm, }\AttributeTok{each =} \DecValTok{100}\NormalTok{)}\SpecialCharTok{*}\FunctionTok{rep}\NormalTok{(x.hm, }\DecValTok{20}\NormalTok{))}
+
+\NormalTok{y.hier }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n =} \DecValTok{20}\SpecialCharTok{*}\DecValTok{100}\NormalTok{, }\AttributeTok{mean =}\NormalTok{ y.mean.hier, sigma)}
+\NormalTok{sim.data.hier }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}\AttributeTok{x =} \FunctionTok{rep}\NormalTok{(x.hm, }\DecValTok{20}\NormalTok{), }
+\NormalTok{                        y.hier, y.mean.hier, }
+                        \AttributeTok{group =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Group"}\NormalTok{, }\FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{20}\NormalTok{, }\AttributeTok{each =} \DecValTok{100}\NormalTok{)))}
+
+\FunctionTok{ggplot}\NormalTok{(sim.data.hier, }\FunctionTok{aes}\NormalTok{(x, y.hier)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(x, y.mean.hier), }\AttributeTok{col=}\StringTok{"blue"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{group)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-10-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nu.mu }\OtherTok{\textless{}{-}} \FunctionTok{dnorm}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd=}\DecValTok{1}\NormalTok{)}
+\NormalTok{tau.mu }\OtherTok{\textless{}{-}} \FunctionTok{dgamma}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{shape=}\DecValTok{1}\NormalTok{, }\AttributeTok{scale=}\DecValTok{1}\NormalTok{)}
+\NormalTok{nu.beta }\OtherTok{\textless{}{-}} \FunctionTok{dnorm}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd=}\DecValTok{1}\NormalTok{)}
+\NormalTok{tau.beta }\OtherTok{\textless{}{-}} \FunctionTok{dgamma}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{shape=}\DecValTok{1}\NormalTok{, }\AttributeTok{scale=}\DecValTok{1}\NormalTok{)}
+\NormalTok{sigma }\OtherTok{\textless{}{-}} \FunctionTok{dgamma}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{shape=}\DecValTok{1}\NormalTok{, }\AttributeTok{scale=}\DecValTok{1}\NormalTok{)}
+
+\FunctionTok{ggplot}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{bx =} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{12}\NormalTok{, }\DecValTok{12}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{100}\NormalTok{)), }\FunctionTok{aes}\NormalTok{(bx)) }\SpecialCharTok{+}
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dnorm, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"nu.mu"}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dgamma, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{shape =} \DecValTok{1}\NormalTok{, }\AttributeTok{scale =} \DecValTok{1}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"tau.mu"}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dgamma, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{shape =} \DecValTok{1}\NormalTok{, }\AttributeTok{scale =} \DecValTok{1}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"tau.beta"}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dnorm, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd=}\DecValTok{1}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"nu.beta"}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dgamma, }\AttributeTok{args=}\FunctionTok{list}\NormalTok{(}\AttributeTok{shape =} \DecValTok{1}\NormalTok{, }\AttributeTok{scale =} \DecValTok{1}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"Sigma"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ nu.mu, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ tau.mu, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"blue"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ nu.beta, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"green"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ tau.beta, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"pink"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ sigma, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"purple"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"density"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"x"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{scale\_color\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"red"}\NormalTok{, }\StringTok{"blue"}\NormalTok{, }\StringTok{"green"}\NormalTok{, }\StringTok{"pink"}\NormalTok{, }\StringTok{"black"}\NormalTok{, }\StringTok{"purple"}\NormalTok{), }
+                     \AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"nu.mu"}\NormalTok{, }\StringTok{"tau.mu"}\NormalTok{, }\StringTok{"tau.beta"}\NormalTok{, }\StringTok{"nu.beta"}\NormalTok{, }\StringTok{"tau.mu"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Prior distributions for nu.mu, tau.mu, tau.beta, nu.beta, tau.mu"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"Prior Value"}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{"Density"}\NormalTok{,}
+       \AttributeTok{color =} \StringTok{"Priors"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-11-1.pdf} -
+Simulation for prior distribution candidate:
+
+\[
+\begin{aligned}
+& \nu_\mu \sim N(0,1000), \nu_\beta \sim N(0,1000), \tau_\mu \sim \text { Gamma }(\text { shape }=1000, \text { scale }=1000), \tau_\beta \sim \text { Gamma }(\text { shape }=1, \text { scale }= \\
+& 1000), \sigma \sim \text { Gamma }(\text { shape }=1000, \text { scale }=1000)
+\end{aligned}
+\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\CommentTok{\# Setting the values of the parameters}
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{17}\NormalTok{)}
+\NormalTok{nu.mu }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd=}\DecValTok{1000}\NormalTok{)}
+\NormalTok{tau.mu }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{shape=}\DecValTok{1000}\NormalTok{, }\AttributeTok{scale=}\DecValTok{1000}\NormalTok{)}
+\NormalTok{nu.beta }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd=}\DecValTok{1000}\NormalTok{)}
+\NormalTok{tau.beta }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{shape=}\DecValTok{1}\NormalTok{, }\AttributeTok{scale=}\DecValTok{1000}\NormalTok{)}
+\NormalTok{mu.hm }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n=}\DecValTok{20}\NormalTok{, }\AttributeTok{mean =}\NormalTok{ nu.mu, }\AttributeTok{sd=}\NormalTok{tau.mu)}
+\NormalTok{beta.hm }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n=}\DecValTok{20}\NormalTok{, }\AttributeTok{mean =}\NormalTok{ nu.beta, }\AttributeTok{sd=}\NormalTok{ tau.beta)}
+\NormalTok{sigma }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{shape=}\DecValTok{1000}\NormalTok{, }\AttributeTok{scale=}\DecValTok{1000}\NormalTok{)}
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\CommentTok{\# Simulating covariate values + data}
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\NormalTok{x.hm }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\AttributeTok{n =} \DecValTok{100}\NormalTok{, }\AttributeTok{min =} \DecValTok{1}\NormalTok{, }\AttributeTok{max=}\DecValTok{5}\NormalTok{)}
+\NormalTok{y.mean.hier }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FunctionTok{rep}\NormalTok{(mu.hm, }\AttributeTok{each =} \DecValTok{100}\NormalTok{) }\SpecialCharTok{+} 
+                   \FunctionTok{rep}\NormalTok{(beta.hm, }\AttributeTok{each =} \DecValTok{100}\NormalTok{)}\SpecialCharTok{*}\FunctionTok{rep}\NormalTok{(x.hm, }\DecValTok{20}\NormalTok{))}
+
+\NormalTok{y.hier }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n =} \DecValTok{20}\SpecialCharTok{*}\DecValTok{100}\NormalTok{, }\AttributeTok{mean =}\NormalTok{ y.mean.hier, sigma)}
+\NormalTok{sim.data.hier }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}\AttributeTok{x =} \FunctionTok{rep}\NormalTok{(x.hm, }\DecValTok{20}\NormalTok{), }
+\NormalTok{                        y.hier, y.mean.hier, }
+                        \AttributeTok{group =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Group"}\NormalTok{, }\FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{20}\NormalTok{, }\AttributeTok{each =} \DecValTok{100}\NormalTok{)))}
+
+\FunctionTok{ggplot}\NormalTok{(sim.data.hier, }\FunctionTok{aes}\NormalTok{(x, y.hier)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(x, y.mean.hier), }\AttributeTok{col=}\StringTok{"blue"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{group)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-12-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nu.mu }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd=}\DecValTok{1000}\NormalTok{)}
+\NormalTok{tau.mu }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{shape=}\DecValTok{1000}\NormalTok{, }\AttributeTok{scale=}\DecValTok{1000}\NormalTok{)}
+\NormalTok{nu.beta }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd=}\DecValTok{1000}\NormalTok{)}
+\NormalTok{tau.beta }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{shape=}\DecValTok{1}\NormalTok{, }\AttributeTok{scale=}\DecValTok{1000}\NormalTok{)}
+\NormalTok{sigma }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{shape=}\DecValTok{1000}\NormalTok{, }\AttributeTok{scale=}\DecValTok{1000}\NormalTok{)}
+
+\FunctionTok{ggplot}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{bx =} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{12}\NormalTok{, }\DecValTok{12}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{100}\NormalTok{)), }\FunctionTok{aes}\NormalTok{(bx)) }\SpecialCharTok{+}
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dnorm, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1000}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"nu.mu"}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dgamma, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{shape =} \DecValTok{1000}\NormalTok{, }\AttributeTok{scale =} \DecValTok{1000}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"tau.mu"}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dgamma, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{shape =} \DecValTok{1000}\NormalTok{, }\AttributeTok{scale =} \DecValTok{1000}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"tau.beta"}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dnorm, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd=}\DecValTok{1000}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"nu.beta"}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dgamma, }\AttributeTok{args=}\FunctionTok{list}\NormalTok{(}\AttributeTok{shape =} \DecValTok{1000}\NormalTok{, }\AttributeTok{scale =} \DecValTok{1000}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"Sigma"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ nu.mu, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ tau.mu, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"blue"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ nu.beta, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"green"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ tau.beta, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"pink"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ sigma, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"purple"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"density"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"x"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{scale\_color\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"red"}\NormalTok{, }\StringTok{"blue"}\NormalTok{, }\StringTok{"green"}\NormalTok{, }\StringTok{"pink"}\NormalTok{, }\StringTok{"black"}\NormalTok{, }\StringTok{"purple"}\NormalTok{), }
+                     \AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"nu.mu"}\NormalTok{, }\StringTok{"tau.mu"}\NormalTok{, }\StringTok{"tau.beta"}\NormalTok{, }\StringTok{"nu.beta"}\NormalTok{, }\StringTok{"tau.mu"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Prior distributions for nu.mu, tau.mu, tau.beta, nu.beta, tau.mu"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"Prior Value"}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{"Density"}\NormalTok{,}
+       \AttributeTok{color =} \StringTok{"Priors"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-13-1.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  Simulation for prior distribution candidate:
+\end{itemize}
+
+\[
+\begin{aligned}
+& \nu_\mu \sim Unif(0,1), \nu_\beta \sim Unif(0,1), \tau_\mu \sim \text { Exp }(1), \tau_\beta \sim \text { Unif }(1), \sigma \sim \text { Unif }(1)
+\end{aligned}
+\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\CommentTok{\# Setting the values of the parameters}
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{17}\NormalTok{)}
+\NormalTok{nu.mu }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{min=}\DecValTok{0}\NormalTok{, }\AttributeTok{max=}\DecValTok{1}\NormalTok{)}
+\NormalTok{tau.mu }\OtherTok{\textless{}{-}} \FunctionTok{rexp}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{rate=}\DecValTok{1}\NormalTok{)}
+\NormalTok{nu.beta }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{min=}\DecValTok{0}\NormalTok{, }\AttributeTok{max=}\DecValTok{1}\NormalTok{)}
+\NormalTok{tau.beta }\OtherTok{\textless{}{-}} \FunctionTok{rexp}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{rate=}\DecValTok{1}\NormalTok{)}
+\NormalTok{mu.hm }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n=}\DecValTok{20}\NormalTok{, }\AttributeTok{mean =}\NormalTok{ nu.mu, }\AttributeTok{sd=}\NormalTok{tau.mu)}
+\NormalTok{beta.hm }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n=}\DecValTok{20}\NormalTok{, }\AttributeTok{mean =}\NormalTok{ nu.beta, }\AttributeTok{sd=}\NormalTok{ tau.beta)}
+\NormalTok{sigma }\OtherTok{\textless{}{-}} \FunctionTok{rexp}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{rate=}\DecValTok{1}\NormalTok{)}
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\CommentTok{\# Simulating covariate values + data}
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\NormalTok{x.hm }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\AttributeTok{n =} \DecValTok{100}\NormalTok{, }\AttributeTok{min =} \DecValTok{1}\NormalTok{, }\AttributeTok{max=}\DecValTok{5}\NormalTok{)}
+\NormalTok{y.mean.hier }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FunctionTok{rep}\NormalTok{(mu.hm, }\AttributeTok{each =} \DecValTok{100}\NormalTok{) }\SpecialCharTok{+} 
+                   \FunctionTok{rep}\NormalTok{(beta.hm, }\AttributeTok{each =} \DecValTok{100}\NormalTok{)}\SpecialCharTok{*}\FunctionTok{rep}\NormalTok{(x.hm, }\DecValTok{20}\NormalTok{))}
+
+\NormalTok{y.hier }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n =} \DecValTok{20}\SpecialCharTok{*}\DecValTok{100}\NormalTok{, }\AttributeTok{mean =}\NormalTok{ y.mean.hier, sigma)}
+\NormalTok{sim.data.hier }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}\AttributeTok{x =} \FunctionTok{rep}\NormalTok{(x.hm, }\DecValTok{20}\NormalTok{), }
+\NormalTok{                        y.hier, y.mean.hier, }
+                        \AttributeTok{group =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Group"}\NormalTok{, }\FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{20}\NormalTok{, }\AttributeTok{each =} \DecValTok{100}\NormalTok{)))}
+
+\FunctionTok{ggplot}\NormalTok{(sim.data.hier, }\FunctionTok{aes}\NormalTok{(x, y.hier)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(x, y.mean.hier), }\AttributeTok{col=}\StringTok{"blue"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{group)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-14-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nu.mu }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{min=}\DecValTok{0}\NormalTok{, }\AttributeTok{max=}\DecValTok{1}\NormalTok{)}
+\NormalTok{tau.mu }\OtherTok{\textless{}{-}} \FunctionTok{rexp}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{rate=}\DecValTok{1}\NormalTok{)}
+\NormalTok{nu.beta }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{min=}\DecValTok{0}\NormalTok{, }\AttributeTok{max=}\DecValTok{1}\NormalTok{)}
+\NormalTok{tau.beta }\OtherTok{\textless{}{-}} \FunctionTok{rexp}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{rate=}\DecValTok{1}\NormalTok{)}
+\NormalTok{sigma }\OtherTok{\textless{}{-}} \FunctionTok{rexp}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{rate=}\DecValTok{1}\NormalTok{)}
+
+\FunctionTok{ggplot}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{bx =} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{12}\NormalTok{, }\DecValTok{12}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{100}\NormalTok{)), }\FunctionTok{aes}\NormalTok{(bx)) }\SpecialCharTok{+}
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dunif, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{min =} \DecValTok{0}\NormalTok{, }\AttributeTok{max =} \DecValTok{1}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"nu.mu"}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dexp, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\DecValTok{1}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"tau.mu"}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dunif, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{min =} \DecValTok{0}\NormalTok{, }\AttributeTok{max =} \DecValTok{1}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"nu.beta"}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dexp, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\DecValTok{1}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"tau.beta"}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dexp, }\AttributeTok{args=}\FunctionTok{list}\NormalTok{(}\DecValTok{1}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{"Sigma"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ nu.mu, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ tau.mu, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"blue"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ nu.beta, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"green"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ tau.beta, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"pink"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ sigma, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"purple"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"density"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"x"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{scale\_color\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"red"}\NormalTok{, }\StringTok{"blue"}\NormalTok{, }\StringTok{"green"}\NormalTok{, }\StringTok{"pink"}\NormalTok{, }\StringTok{"black"}\NormalTok{, }\StringTok{"purple"}\NormalTok{), }
+                     \AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"nu.mu"}\NormalTok{, }\StringTok{"tau.mu"}\NormalTok{, }\StringTok{"tau.beta"}\NormalTok{, }\StringTok{"nu.beta"}\NormalTok{, }\StringTok{"tau.mu"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Prior distributions for nu.mu, tau.mu, tau.beta, nu.beta, tau.mu"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"Prior Value"}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{"Density"}\NormalTok{,}
+       \AttributeTok{color =} \StringTok{"Priors"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-15-1.pdf}
+The best choice of the betas and sigma combinations would be to
+consider:
+
+\[\begin{equation}
+\beta_0 \sim N\left(0, \sigma_{\beta_0}=1\right), \beta_1 \sim N\left(0, \sigma_{\beta_1}=1\right), \sigma \sim \text { Gamma }(\text { shape }=1, \text { scale }=1)
+\end{equation}\]
+
+This is because, simulated plots seem to uniformly fit the mean line and
+have a clear pattern across the datasets. Considering the density plots
+as well, they appear to be close to the true value of the mean. This
+translates into effective simulations. \# Question 2.1: Fitting a Linear
+Regression Model
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{load}\NormalTok{(}\StringTok{"bayes{-}vis.RData"}\NormalTok{)}
+\DocumentationTok{\#\# Adding a column with numbers}
+\NormalTok{GM}\SpecialCharTok{$}\NormalTok{super\_region\_name\_dup }\OtherTok{\textless{}{-}}\NormalTok{ GM}\SpecialCharTok{$}\NormalTok{super\_region\_name}
+\NormalTok{latcab }\OtherTok{\textless{}{-}} \FunctionTok{st\_as\_sf}\NormalTok{(GM[GM}\SpecialCharTok{$}\NormalTok{super\_region }\SpecialCharTok{==} \DecValTok{5}\NormalTok{,])}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{first-set-of-priors-for-linear-regression}{%
+\subsection{First set of priors for linear
+regression:}\label{first-set-of-priors-for-linear-regression}}
+
+\begin{itemize}
+\tightlist
+\item
+  \(\beta_0 \sim \mathrm{N}\left(\mu=0, \sigma^2=1 / 0.1\right)\)
+\item
+  \(\beta_1 \sim N\left(\mu=0, \sigma^2=1 / 0.1\right)\)
+\item
+  \(\tau \sim \operatorname{Gamma}(0.01,0.01)\)
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# Adding in prior distributions}
+\DocumentationTok{\#\#\# Default normal distributions for b0 and b1}
+\NormalTok{prior.fixed1\_model1 }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\AttributeTok{mean.intercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{prec.intercept =} \FloatTok{0.1}\NormalTok{,}
+                    \AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{prec =} \FloatTok{0.1}\NormalTok{)}
+\NormalTok{prior.prec1\_model1 }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\AttributeTok{prec =} \FunctionTok{list}\NormalTok{(}\AttributeTok{prior =} \StringTok{"loggamma"}\NormalTok{, }
+                               \AttributeTok{param =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.01}\NormalTok{, }\FloatTok{0.01}\NormalTok{)))}
+
+\NormalTok{completepool1\_model1 }\OtherTok{\textless{}{-}} \FunctionTok{inla}\NormalTok{(}\AttributeTok{formula =}\NormalTok{ pm25 }\SpecialCharTok{\textasciitilde{}} \DecValTok{1} \SpecialCharTok{+}\NormalTok{ sat\_2014, }
+                     \AttributeTok{data =} \FunctionTok{data.frame}\NormalTok{(latcab), }
+                     \AttributeTok{control.fixed =}\NormalTok{ prior.fixed1\_model1, }
+                     \AttributeTok{control.family =} \FunctionTok{list}\NormalTok{(}\AttributeTok{hyper =} \FunctionTok{list}\NormalTok{(}\AttributeTok{prec =}\NormalTok{ prior.prec1\_model1)),}
+                     \AttributeTok{control.compute=}\FunctionTok{list}\NormalTok{(}\AttributeTok{config =} \ConstantTok{TRUE}\NormalTok{))}
+
+\NormalTok{postdraws.cpool1\_model1 }\OtherTok{\textless{}{-}} \FunctionTok{inla.posterior.sample}\NormalTok{(}\DecValTok{1000}\NormalTok{, completepool1\_model1)}
+
+\CommentTok{\# make a dataframe of the posterior draws from 104 to 110}
+\NormalTok{posterior1\_model1 }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{1000}\NormalTok{)\{}
+\NormalTok{  posterior1\_model1 }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(posterior1\_model1, postdraws.cpool1\_model1[[j]]}\SpecialCharTok{$}\NormalTok{latent[}\DecValTok{104}\SpecialCharTok{:}\DecValTok{105}\NormalTok{])}
+  \FunctionTok{colnames}\NormalTok{(posterior1\_model1) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Intercept"}\NormalTok{, }\StringTok{"sat\_2014"}\NormalTok{)}
+\NormalTok{\}}
+
+\CommentTok{\# Create a grid of histograms and density plots}
+\FunctionTok{ggplot}\NormalTok{(}\FunctionTok{melt}\NormalTok{(posterior1\_model1), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{value)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y=}\NormalTok{..density..)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{variable, }\AttributeTok{scales=}\StringTok{"free"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-17-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(posterior1\_model1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Intercept          sat_2014     
+##  Min.   :-0.5191   Min.   :0.6117  
+##  1st Qu.: 5.8315   1st Qu.:1.4630  
+##  Median : 7.3846   Median :1.6698  
+##  Mean   : 7.2932   Mean   :1.6716  
+##  3rd Qu.: 8.8370   3rd Qu.:1.8819  
+##  Max.   :15.3384   Max.   :2.8783
+\end{verbatim}
+
+\hypertarget{second-set-of-priors-for-linear-regression}{%
+\subsection{Second set of priors for linear
+regression:}\label{second-set-of-priors-for-linear-regression}}
+
+\begin{itemize}
+\tightlist
+\item
+  \(\beta_0 \sim \mathrm{N}\left(\mu=0, \sigma^2=1 / 0.01\right)\)
+\item
+  \(\beta_1 \sim N\left(\mu=0, \sigma^2=1 / 0.01\right)\)
+\item
+  \(\tau \sim \operatorname{Gamma}(1,1)\)
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# Adding in prior distributions}
+\DocumentationTok{\#\#\# Default normal distributions for b0 and b1}
+\NormalTok{prior.fixed1\_model2 }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\AttributeTok{mean.intercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{prec.intercept =} \FloatTok{0.01}\NormalTok{,}
+                    \AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{prec =} \FloatTok{0.01}\NormalTok{)}
+\NormalTok{prior.prec1\_model2 }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\AttributeTok{prec =} \FunctionTok{list}\NormalTok{(}\AttributeTok{prior =} \StringTok{"loggamma"}\NormalTok{, }
+                               \AttributeTok{param =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{)))}
+
+\NormalTok{completepool1\_model2 }\OtherTok{\textless{}{-}} \FunctionTok{inla}\NormalTok{(}\AttributeTok{formula =}\NormalTok{ pm25 }\SpecialCharTok{\textasciitilde{}} \DecValTok{1} \SpecialCharTok{+}\NormalTok{ sat\_2014, }
+                     \AttributeTok{data =} \FunctionTok{data.frame}\NormalTok{(latcab), }
+                     \AttributeTok{control.fixed =}\NormalTok{ prior.fixed1\_model2, }
+                     \AttributeTok{control.family =} \FunctionTok{list}\NormalTok{(}\AttributeTok{hyper =} \FunctionTok{list}\NormalTok{(}\AttributeTok{prec =}\NormalTok{ prior.prec1\_model2)),}
+                     \AttributeTok{control.compute=}\FunctionTok{list}\NormalTok{(}\AttributeTok{config =} \ConstantTok{TRUE}\NormalTok{))}
+
+\NormalTok{postdraws.cpool1\_model2 }\OtherTok{\textless{}{-}} \FunctionTok{inla.posterior.sample}\NormalTok{(}\DecValTok{1000}\NormalTok{, completepool1\_model2)}
+\CommentTok{\# make a dataframe of the posterior draws from 104 to 110}
+\NormalTok{posterior1\_model2 }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{1000}\NormalTok{)\{}
+\NormalTok{  posterior1\_model2 }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(posterior1\_model2, postdraws.cpool1\_model2[[j]]}\SpecialCharTok{$}\NormalTok{latent[}\DecValTok{104}\SpecialCharTok{:}\DecValTok{105}\NormalTok{])}
+  \FunctionTok{colnames}\NormalTok{(posterior1\_model2) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Intercept"}\NormalTok{, }\StringTok{"sat\_2014"}\NormalTok{)}
+\NormalTok{\}}
+
+\CommentTok{\# Create a grid of histograms and density plots}
+\FunctionTok{ggplot}\NormalTok{(}\FunctionTok{melt}\NormalTok{(posterior1\_model2), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{value)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y=}\NormalTok{..density..)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{variable, }\AttributeTok{scales=}\StringTok{"free"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-19-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(posterior1\_model2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Intercept         sat_2014      
+##  Min.   : 3.301   Min.   :-0.2973  
+##  1st Qu.:10.533   1st Qu.: 0.7335  
+##  Median :12.531   Median : 0.9819  
+##  Mean   :12.401   Mean   : 1.0002  
+##  3rd Qu.:14.175   3rd Qu.: 1.2669  
+##  Max.   :21.165   Max.   : 2.2435
+\end{verbatim}
+
+\hypertarget{question-2.2-fitting-a-multilevel-regression-model}{%
+\section{Question 2.2: Fitting a Multilevel Regression
+Model}\label{question-2.2-fitting-a-multilevel-regression-model}}
+
+\hypertarget{first-set-of-priors-for-multilevel}{%
+\subsection{First set of priors for
+multilevel:}\label{first-set-of-priors-for-multilevel}}
+
+\begin{itemize}
+\tightlist
+\item
+  \(\beta_0 \sim \mathrm{N}\left(\mu=0, \sigma^2=1 / 0.1\right)\)
+\item
+  \(\beta_1 \sim N\left(\mu=0, \sigma^2=1 / 0.1\right)\)
+\item
+  \(\tau \sim \operatorname{Gamma}(0.01,0.01)\)
+\item
+  \(\tau_\mu \sim \operatorname{Gamma}(0.01,0.01)\)
+\item
+  \(\tau_\beta \sim \operatorname{Gamma}(0.01,0.01)\)
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\# Default normal distributions for b0 and b1}
+\NormalTok{prior.fixed2\_model1 }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\AttributeTok{mean.intercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{prec.intercept =} \FloatTok{0.1}\NormalTok{,}
+                    \AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{prec =} \FloatTok{0.1}\NormalTok{)}
+\NormalTok{prior.prec2\_model1 }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\AttributeTok{prec =} \FunctionTok{list}\NormalTok{(}\AttributeTok{prior =} \StringTok{"loggamma"}\NormalTok{, }
+                               \AttributeTok{param =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.01}\NormalTok{, }\FloatTok{0.01}\NormalTok{)))}
+
+\NormalTok{partialpool2\_model1 }\OtherTok{\textless{}{-}} \FunctionTok{inla}\NormalTok{(}\AttributeTok{formula =}\NormalTok{ pm25 }\SpecialCharTok{\textasciitilde{}} \DecValTok{1} \SpecialCharTok{+}    
+                       \FunctionTok{f}\NormalTok{(super\_region\_name,  }
+                         \AttributeTok{model =} \StringTok{"iid"}\NormalTok{, }
+                         \AttributeTok{hyper =}\NormalTok{ prior.prec2\_model1) }\SpecialCharTok{+} 
+                       \FunctionTok{f}\NormalTok{(super\_region\_name\_dup, sat\_2014, }
+                         \AttributeTok{model =} \StringTok{"iid"}\NormalTok{,}
+                         \AttributeTok{hyper =}\NormalTok{ prior.prec2\_model1), }
+                     \AttributeTok{data =} \FunctionTok{data.frame}\NormalTok{(GM), }
+                     \AttributeTok{control.fixed =}\NormalTok{ prior.fixed2\_model1,}
+                     \AttributeTok{control.family =} \FunctionTok{list}\NormalTok{(}\AttributeTok{hyper =} \FunctionTok{list}\NormalTok{(}\AttributeTok{prec =}\NormalTok{ prior.prec2\_model1)), }
+                    \AttributeTok{control.compute =} \FunctionTok{list}\NormalTok{(}\AttributeTok{config =} \ConstantTok{TRUE}\NormalTok{))}
+
+\NormalTok{postdraws.cpool2\_model1 }\OtherTok{\textless{}{-}} \FunctionTok{inla.posterior.sample}\NormalTok{(}\DecValTok{1000}\NormalTok{, partialpool2\_model1)}
+
+\CommentTok{\# make a dataframe of the posterior draws from 104 to 110}
+\NormalTok{posterior2\_model1 }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{1000}\NormalTok{)\{}
+\NormalTok{  posterior2\_model1 }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(posterior2\_model1, postdraws.cpool2\_model1[[j]]}\SpecialCharTok{$}\NormalTok{latent[}\DecValTok{104}\SpecialCharTok{:}\DecValTok{110}\NormalTok{])}
+  \FunctionTok{colnames}\NormalTok{(posterior2\_model1) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"super\_region\_name:1"}\NormalTok{, }\StringTok{"super\_region\_name:2"}\NormalTok{, }\StringTok{"super\_region\_name:3"}\NormalTok{, }\StringTok{"super\_region\_name:4"}\NormalTok{, }\StringTok{"super\_region\_name:5"}\NormalTok{, }\StringTok{"super\_region\_name:6"}\NormalTok{, }\StringTok{"super\_region\_name:7"}\NormalTok{)}
+\NormalTok{\}}
+
+\CommentTok{\# Create a grid of histograms and density plots}
+\FunctionTok{ggplot}\NormalTok{(}\FunctionTok{melt}\NormalTok{(posterior2\_model1), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{value)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y=}\NormalTok{..density..)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{variable, }\AttributeTok{scales=}\StringTok{"free"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-21-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(posterior2\_model1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  super_region_name:1 super_region_name:2 super_region_name:3
+##  Min.   :10.69       Min.   :14.33       Min.   :31.28      
+##  1st Qu.:11.27       1st Qu.:15.09       1st Qu.:34.04      
+##  Median :11.44       Median :15.32       Median :34.69      
+##  Mean   :11.44       Mean   :15.31       Mean   :34.68      
+##  3rd Qu.:11.59       3rd Qu.:15.53       3rd Qu.:35.33      
+##  Max.   :12.14       Max.   :16.38       Max.   :37.93      
+##  super_region_name:4 super_region_name:5 super_region_name:6
+##  Min.   :12.48       Min.   :15.37       Min.   : 9.196     
+##  1st Qu.:16.29       1st Qu.:20.32       1st Qu.: 9.837     
+##  Median :17.30       Median :21.37       Median :10.014     
+##  Mean   :17.35       Mean   :21.41       Mean   :10.013     
+##  3rd Qu.:18.40       3rd Qu.:22.45       3rd Qu.:10.189     
+##  Max.   :22.84       Max.   :26.15       Max.   :10.856     
+##  super_region_name:7
+##  Min.   :12.18      
+##  1st Qu.:12.82      
+##  Median :12.99      
+##  Mean   :12.98      
+##  3rd Qu.:13.14      
+##  Max.   :13.83
+\end{verbatim}
+
+\hypertarget{second-set-of-priors}{%
+\subsection{Second set of priors:}\label{second-set-of-priors}}
+
+\begin{itemize}
+\tightlist
+\item
+  \(\beta_0 \sim \mathrm{N}\left(\mu=0, \sigma^2=1 / 0.01\right)\)
+\item
+  \(\beta_1 \sim N\left(\mu=0, \sigma^2=1 / 0.01\right)\)
+\item
+  \(\tau \sim \operatorname{Gamma}(1,1)\)
+\item
+  \(\tau_\mu \sim \operatorname{Gamma}(1,1)\)
+\item
+  \(\tau_\beta \sim \operatorname{Gamma}(1,1)\)
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\# Default normal distributions for b0 and b1}
+\NormalTok{prior.fixed2\_model2 }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\AttributeTok{mean.intercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{prec.intercept =} \FloatTok{0.01}\NormalTok{,}
+                    \AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{prec =} \FloatTok{0.01}\NormalTok{)}
+\NormalTok{prior.prec2\_model2 }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\AttributeTok{prec =} \FunctionTok{list}\NormalTok{(}\AttributeTok{prior =} \StringTok{"loggamma"}\NormalTok{, }
+                               \AttributeTok{param =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{)))}
+
+\NormalTok{partialpool2\_model1 }\OtherTok{\textless{}{-}} \FunctionTok{inla}\NormalTok{(}\AttributeTok{formula =}\NormalTok{ pm25 }\SpecialCharTok{\textasciitilde{}} \DecValTok{1} \SpecialCharTok{+} 
+                              \FunctionTok{f}\NormalTok{(super\_region\_name, }
+                                \AttributeTok{model =} \StringTok{"iid"}\NormalTok{, }
+                                \AttributeTok{hyper =}\NormalTok{ prior.prec2\_model2) }\SpecialCharTok{+} 
+                              \FunctionTok{f}\NormalTok{(super\_region\_name\_dup, sat\_2014, }
+                                \AttributeTok{model =} \StringTok{"iid"}\NormalTok{,}
+                                \AttributeTok{hyper =}\NormalTok{ prior.prec2\_model2), }
+                            \AttributeTok{data =} \FunctionTok{data.frame}\NormalTok{(latcab),}
+                            \AttributeTok{control.fixed =}\NormalTok{ prior.fixed2\_model2,}
+                            \AttributeTok{control.family =} \FunctionTok{list}\NormalTok{(}\AttributeTok{hyper =} \FunctionTok{list}\NormalTok{(}\AttributeTok{prec =}\NormalTok{ prior.prec2\_model2)),}
+                            \AttributeTok{control.compute=}\FunctionTok{list}\NormalTok{(}\AttributeTok{config =} \ConstantTok{TRUE}\NormalTok{))}
+
+\NormalTok{postdraws.cpool2\_model2 }\OtherTok{\textless{}{-}} \FunctionTok{inla.posterior.sample}\NormalTok{(}\DecValTok{1000}\NormalTok{, partialpool2\_model1)}
+
+\CommentTok{\# make a dataframe of the posterior draws from 104 to 110}
+\NormalTok{posterior2\_model2 }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{1000}\NormalTok{)\{}
+\NormalTok{  posterior2\_model2 }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(posterior2\_model2, postdraws.cpool2\_model2[[j]]}\SpecialCharTok{$}\NormalTok{latent[}\DecValTok{104}\SpecialCharTok{:}\DecValTok{110}\NormalTok{])}
+  \FunctionTok{colnames}\NormalTok{(posterior2\_model2) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"super\_region\_name:1"}\NormalTok{, }\StringTok{"super\_region\_name:2"}\NormalTok{, }\StringTok{"super\_region\_name:3"}\NormalTok{, }\StringTok{"super\_region\_name:4"}\NormalTok{, }\StringTok{"super\_region\_name:5"}\NormalTok{, }\StringTok{"super\_region\_name:6"}\NormalTok{, }\StringTok{"super\_region\_name:7"}\NormalTok{)}
+\NormalTok{\}}
+
+\CommentTok{\# Create a grid of histograms and density plots}
+\FunctionTok{ggplot}\NormalTok{(}\FunctionTok{melt}\NormalTok{(posterior2\_model2), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{value)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y=}\NormalTok{..density..)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{variable, }\AttributeTok{scales=}\StringTok{"free"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-23-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(posterior2\_model2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  super_region_name:1 super_region_name:2 super_region_name:3
+##  Min.   :-8.780020   Min.   :-8.08535    Min.   :-6.6535    
+##  1st Qu.:-0.686491   1st Qu.:-0.67216    1st Qu.:-0.5128    
+##  Median : 0.002419   Median : 0.03280    Median : 0.1405    
+##  Mean   : 0.053391   Mean   : 0.03808    Mean   : 0.2573    
+##  3rd Qu.: 0.713154   3rd Qu.: 0.68856    3rd Qu.: 0.8002    
+##  Max.   : 7.274807   Max.   : 7.57225    Max.   : 8.4048    
+##  super_region_name:4 super_region_name:5 super_region_name:6
+##  Min.   :-7.42319    Min.   :-8.36858    Min.   :-6.69135   
+##  1st Qu.:-0.62868    1st Qu.:-0.64757    1st Qu.:-0.64515   
+##  Median : 0.03299    Median :-0.01772    Median :-0.04197   
+##  Mean   : 0.07669    Mean   :-0.02945    Mean   :-0.03630   
+##  3rd Qu.: 0.63522    3rd Qu.: 0.62108    3rd Qu.: 0.66049   
+##  Max.   : 7.67113    Max.   : 6.96506    Max.   : 9.34694   
+##  super_region_name:7
+##  Min.   :-7.92267   
+##  1st Qu.:-0.63926   
+##  Median :-0.07389   
+##  Mean   :-0.05353   
+##  3rd Qu.: 0.64236   
+##  Max.   : 7.45537
+\end{verbatim}
+
+\hypertarget{question-3.1}{%
+\section{Question 3.1:}\label{question-3.1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{postdraws.cpool1\_model1 }\OtherTok{\textless{}{-}} \FunctionTok{inla.posterior.sample}\NormalTok{(}\DecValTok{100}\NormalTok{, completepool1\_model1)}
+\NormalTok{postdraws.cpool2\_model2 }\OtherTok{\textless{}{-}} \FunctionTok{inla.posterior.sample}\NormalTok{(}\DecValTok{100}\NormalTok{, completepool1\_model2)}
+
+\NormalTok{samples\_1 }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{)\{}
+\NormalTok{  samples\_1 }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(samples\_1, postdraws.cpool1\_model1[[j]]}\SpecialCharTok{$}\NormalTok{latent[}\DecValTok{104}\SpecialCharTok{:}\DecValTok{105}\NormalTok{])}
+  \FunctionTok{colnames}\NormalTok{(samples\_1) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Intercept"}\NormalTok{, }\StringTok{"sat\_2014"}\NormalTok{)}
+\NormalTok{\}}
+
+
+\NormalTok{beta0\_sample\_1 }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1}\NormalTok{)}
+\NormalTok{beta1\_sample\_1 }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1}\NormalTok{)}
+\NormalTok{tau1\_sample\_1 }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\DecValTok{100}\NormalTok{, }\AttributeTok{shape =} \FloatTok{0.01}\NormalTok{, }\AttributeTok{scale =} \FloatTok{0.01}\NormalTok{)}
+
+\NormalTok{y\_1\_simulation }\OtherTok{\textless{}{-}}\NormalTok{ beta0\_sample\_1 }\SpecialCharTok{+}\NormalTok{ samples\_1}\SpecialCharTok{$}\NormalTok{sat\_2014}\SpecialCharTok{*}\NormalTok{beta1\_sample\_1 }\SpecialCharTok{+}\NormalTok{ samples\_1}\SpecialCharTok{$}\NormalTok{Intercept }\SpecialCharTok{+}\NormalTok{ tau1\_sample\_1}
+\CommentTok{\# Create a grid of histograms and density plots}
+
+\NormalTok{samples\_2 }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{)\{}
+\NormalTok{  samples\_2 }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(samples\_2, postdraws.cpool1\_model2[[j]]}\SpecialCharTok{$}\NormalTok{latent[}\DecValTok{104}\SpecialCharTok{:}\DecValTok{105}\NormalTok{])}
+  \FunctionTok{colnames}\NormalTok{(samples\_2) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Intercept"}\NormalTok{, }\StringTok{"sat\_2014"}\NormalTok{)}
+\NormalTok{\}}
+
+\NormalTok{beta0\_sample\_2 }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1}\NormalTok{)}
+\NormalTok{beta1\_sample\_2 }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1}\NormalTok{)}
+\NormalTok{tau1\_sample\_2 }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\DecValTok{100}\NormalTok{, }\AttributeTok{shape =} \FloatTok{0.01}\NormalTok{, }\AttributeTok{scale =} \FloatTok{0.01}\NormalTok{)}
+
+\NormalTok{y\_2\_simulation }\OtherTok{\textless{}{-}}\NormalTok{ beta0\_sample\_2 }\SpecialCharTok{+}\NormalTok{ samples\_2}\SpecialCharTok{$}\NormalTok{sat\_2014}\SpecialCharTok{*}\NormalTok{beta1\_sample\_2 }\SpecialCharTok{+}\NormalTok{ samples\_2}\SpecialCharTok{$}\NormalTok{Intercept }\SpecialCharTok{+}\NormalTok{ tau1\_sample\_2}
+
+\NormalTok{plot1 }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(y\_1\_simulation), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{y\_1\_simulation)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y=}\NormalTok{..density..)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+
+\NormalTok{plot2 }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(y\_2\_simulation), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{y\_2\_simulation)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y=}\NormalTok{..density..)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+
+
+\FunctionTok{plot\_grid}\NormalTok{(plot1, plot2, }\AttributeTok{ncol =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-25-1.pdf}
+The simulated data appears to to near about the same as the actual data
+shown in the Q2.2 histograms. Once we multiply the predictors with the
+hyperparameter estimates, we roughly get a similar histogram for both
+the models.
+
+\hypertarget{question-3.2}{%
+\section{Question 3.2:}\label{question-3.2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{postdraws.cpool2\_model1 }\OtherTok{\textless{}{-}} \FunctionTok{inla.posterior.sample}\NormalTok{(}\DecValTok{100}\NormalTok{, completepool1\_model1)}
+\NormalTok{postdraws.cpool2\_model2 }\OtherTok{\textless{}{-}} \FunctionTok{inla.posterior.sample}\NormalTok{(}\DecValTok{100}\NormalTok{, completepool1\_model2)}
+
+\NormalTok{samples\_1\_1 }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{)\{}
+\NormalTok{  samples\_1\_1 }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(samples\_1\_1, postdraws.cpool2\_model1[[j]]}\SpecialCharTok{$}\NormalTok{latent[}\DecValTok{104}\SpecialCharTok{:}\DecValTok{110}\NormalTok{])}
+  \FunctionTok{colnames}\NormalTok{(samples\_1) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Intercept"}\NormalTok{, }\StringTok{"sat\_2014"}\NormalTok{)}
+\NormalTok{\}}
+
+
+\NormalTok{beta0\_sample\_1 }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1}\NormalTok{)}
+\NormalTok{beta1\_sample\_1 }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1}\NormalTok{)}
+\NormalTok{tau1\_sample\_1 }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\DecValTok{100}\NormalTok{, }\AttributeTok{shape =} \FloatTok{0.01}\NormalTok{, }\AttributeTok{scale =} \FloatTok{0.01}\NormalTok{)}
+
+\NormalTok{y\_1\_simulation }\OtherTok{\textless{}{-}}\NormalTok{ beta0\_sample\_1 }\SpecialCharTok{+}\NormalTok{ samples\_1}\SpecialCharTok{$}\NormalTok{sat\_2014}\SpecialCharTok{*}\NormalTok{beta1\_sample\_1 }\SpecialCharTok{+}\NormalTok{ samples\_1}\SpecialCharTok{$}\NormalTok{Intercept }\SpecialCharTok{+}\NormalTok{ tau1\_sample\_1}
+\CommentTok{\# Create a grid of histograms and density plots}
+
+\NormalTok{samples\_2 }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{)\{}
+\NormalTok{  samples\_2 }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(samples\_2, postdraws.cpool1\_model2[[j]]}\SpecialCharTok{$}\NormalTok{latent[}\DecValTok{104}\SpecialCharTok{:}\DecValTok{110}\NormalTok{])}
+  \FunctionTok{colnames}\NormalTok{(samples\_2) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Intercept"}\NormalTok{, }\StringTok{"sat\_2014"}\NormalTok{)}
+\NormalTok{\}}
+
+\NormalTok{beta0\_sample\_2 }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1}\NormalTok{)}
+\NormalTok{beta1\_sample\_2 }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1}\NormalTok{)}
+\NormalTok{tau1\_sample\_2 }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\DecValTok{100}\NormalTok{, }\AttributeTok{shape =} \FloatTok{0.01}\NormalTok{, }\AttributeTok{scale =} \FloatTok{0.01}\NormalTok{)}
+
+\NormalTok{y\_2\_simulation }\OtherTok{\textless{}{-}}\NormalTok{ beta0\_sample\_2 }\SpecialCharTok{+}\NormalTok{ samples\_2}\SpecialCharTok{$}\NormalTok{sat\_2014}\SpecialCharTok{*}\NormalTok{beta1\_sample\_2 }\SpecialCharTok{+}\NormalTok{ samples\_2}\SpecialCharTok{$}\NormalTok{Intercept }\SpecialCharTok{+}\NormalTok{ tau1\_sample\_2}
+
+\NormalTok{plot1 }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(y\_1\_simulation), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{y\_1\_simulation)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y=}\NormalTok{..density..)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+
+\NormalTok{plot2 }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(y\_2\_simulation), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{y\_2\_simulation)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y=}\NormalTok{..density..)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+
+
+\FunctionTok{plot\_grid}\NormalTok{(plot1, plot2, }\AttributeTok{ncol =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-26-1.pdf}
+The simulated data appears to to near about the same as the actual data
+shown in the Q2.2 histograms. Once we multiply the predictors with the
+hyperparameter estimates, we roughly get a similar histogram for both
+the models.\\
+\# Question 4.1:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(sf)}
+\FunctionTok{library}\NormalTok{(tmap)}
+\NormalTok{nc\_sf }\OtherTok{\textless{}{-}} \FunctionTok{st\_read}\NormalTok{(}\FunctionTok{system.file}\NormalTok{(}\StringTok{"shape/nc.shp"}\NormalTok{, }\AttributeTok{package=}\StringTok{"sf"}\NormalTok{),}
+\AttributeTok{quiet=}\ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{st\_crs}\NormalTok{(nc\_sf)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Coordinate Reference System:
+##   User input: NAD27 
+##   wkt:
+## GEOGCRS["NAD27",
+##     DATUM["North American Datum 1927",
+##         ELLIPSOID["Clarke 1866",6378206.4,294.978698213898,
+##             LENGTHUNIT["metre",1]]],
+##     PRIMEM["Greenwich",0,
+##         ANGLEUNIT["degree",0.0174532925199433]],
+##     CS[ellipsoidal,2],
+##         AXIS["latitude",north,
+##             ORDER[1],
+##             ANGLEUNIT["degree",0.0174532925199433]],
+##         AXIS["longitude",east,
+##             ORDER[2],
+##             ANGLEUNIT["degree",0.0174532925199433]],
+##     ID["EPSG",4267]]
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{global\_rate }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(nc\_sf}\SpecialCharTok{$}\NormalTok{SID74)}\SpecialCharTok{/}\FunctionTok{sum}\NormalTok{(nc\_sf}\SpecialCharTok{$}\NormalTok{BIR74)}
+\NormalTok{nc\_sf}\SpecialCharTok{$}\NormalTok{Expected }\OtherTok{\textless{}{-}}\NormalTok{ global\_rate }\SpecialCharTok{*}\NormalTok{ nc\_sf}\SpecialCharTok{$}\NormalTok{BIR74}
+
+\FunctionTok{tm\_shape}\NormalTok{(nc\_sf) }\SpecialCharTok{+} \FunctionTok{tm\_fill}\NormalTok{(}\StringTok{"SID74"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-27-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tm\_shape}\NormalTok{(nc\_sf) }\SpecialCharTok{+} \FunctionTok{tm\_fill}\NormalTok{(}\StringTok{"Expected"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-27-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{neighbor.nc }\OtherTok{\textless{}{-}} \FunctionTok{poly2nb}\NormalTok{(nc\_sf)}
+\FunctionTok{data}\NormalTok{(pennLC)}
+\NormalTok{Wmat }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\DecValTok{0}\NormalTok{, }\AttributeTok{nrow=}\DecValTok{100}\NormalTok{, }\AttributeTok{ncol=}\DecValTok{100}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{(m }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{)\{}
+\NormalTok{  Wmat[m,neighbor.nc[[m]]] }\OtherTok{\textless{}{-}} \DecValTok{1}
+\NormalTok{  Wmat[neighbor.nc[[m]],m] }\OtherTok{\textless{}{-}} \DecValTok{1}
+\NormalTok{\}  }
+\NormalTok{Dmat }\OtherTok{\textless{}{-}} \FunctionTok{diag}\NormalTok{(}\FunctionTok{sapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(i) }\FunctionTok{length}\NormalTok{(neighbor.nc[[i]])))}
+
+\DocumentationTok{\#\#\# Prior set 1}
+\NormalTok{beta0.pr1 }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n=}\DecValTok{100}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd=}\DecValTok{1}\NormalTok{)}
+\NormalTok{beta1.pr1 }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n=}\DecValTok{100}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd=}\DecValTok{1}\NormalTok{)}
+\NormalTok{tauv.pr1 }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\AttributeTok{n=}\DecValTok{100}\NormalTok{, }\AttributeTok{shape=}\DecValTok{1}\NormalTok{, }\AttributeTok{scale=}\DecValTok{1}\NormalTok{)}
+\NormalTok{tauu.pr1 }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\AttributeTok{n=}\DecValTok{100}\NormalTok{, }\AttributeTok{shape=}\DecValTok{1}\NormalTok{, }\AttributeTok{scale=}\DecValTok{1}\NormalTok{)}
+
+
+\DocumentationTok{\#\# Prior predictive 1}
+\NormalTok{unstruc.re.priorpred1 }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\ConstantTok{NA}\NormalTok{, }\AttributeTok{nrow=}\DecValTok{100}\NormalTok{, }\AttributeTok{ncol=}\DecValTok{100}\NormalTok{)}
+\NormalTok{spatial.re.priorpred1 }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\ConstantTok{NA}\NormalTok{, }\AttributeTok{nrow=}\DecValTok{100}\NormalTok{, }\AttributeTok{ncol=}\DecValTok{100}\NormalTok{)}
+\NormalTok{lambda.priorpred1 }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\ConstantTok{NA}\NormalTok{, }\AttributeTok{nrow=}\DecValTok{100}\NormalTok{, }\AttributeTok{ncol=}\DecValTok{100}\NormalTok{)}
+\NormalTok{ypriorpred1 }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\ConstantTok{NA}\NormalTok{, }\AttributeTok{nrow=}\DecValTok{100}\NormalTok{, }\AttributeTok{ncol=}\DecValTok{100}\NormalTok{)}
+
+\NormalTok{linear.priorpred1 }\OtherTok{\textless{}{-}}\NormalTok{ beta0.pr1 }\SpecialCharTok{+}\NormalTok{ beta1.pr1}\SpecialCharTok{*}\FunctionTok{matrix}\NormalTok{(nc\_sf}\SpecialCharTok{$}\NormalTok{Expected, }\AttributeTok{nrow=}\DecValTok{100}\NormalTok{, }\AttributeTok{ncol=}\DecValTok{100}\NormalTok{) }
+
+\ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{)\{}
+  
+  \DocumentationTok{\#\# Unstructured Random Effect}
+\NormalTok{  unstruc.re.priorpred1[,j] }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n=}\DecValTok{100}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd=}\DecValTok{1}\SpecialCharTok{/}\FunctionTok{sqrt}\NormalTok{(tauv.pr1[j])) }
+
+  \DocumentationTok{\#\# Structured Random Effect}
+\NormalTok{  Qmat }\OtherTok{\textless{}{-}}\NormalTok{ tauu.pr1[j]}\SpecialCharTok{*}\NormalTok{(Dmat}\SpecialCharTok{{-}}\NormalTok{Wmat) }
+\NormalTok{  Qmat.eigen }\OtherTok{\textless{}{-}} \FunctionTok{eigen}\NormalTok{(Qmat)}
+\NormalTok{  eigen.diag.comp }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{/}\FunctionTok{sqrt}\NormalTok{(Qmat.eigen}\SpecialCharTok{$}\NormalTok{values)}
+  \DocumentationTok{\#\#\# numerical instability}
+\NormalTok{  eigen.diag.comp[}\FunctionTok{is.na}\NormalTok{(eigen.diag.comp)] }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{  x }\OtherTok{\textless{}{-}}\NormalTok{ Qmat.eigen}\SpecialCharTok{$}\NormalTok{vectors}\SpecialCharTok{\%*\%}
+    \FunctionTok{diag}\NormalTok{(eigen.diag.comp)}\SpecialCharTok{\%*\%}
+    \FunctionTok{matrix}\NormalTok{(}\FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n=}\DecValTok{100}\NormalTok{, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd=}\DecValTok{1}\NormalTok{), }\AttributeTok{nrow=}\DecValTok{100}\NormalTok{, }\AttributeTok{ncol=}\DecValTok{1}\NormalTok{)}
+\NormalTok{  spatial.re.priorpred1[,j] }\OtherTok{\textless{}{-}}\NormalTok{ x  }
+ 
+  \DocumentationTok{\#\# Lambda of Poisson}
+\NormalTok{  lambda.priorpred1[,j] }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(nc\_sf}\SpecialCharTok{$}\NormalTok{SID74, }\AttributeTok{nrow=}\DecValTok{1}\NormalTok{, }\AttributeTok{ncol=}\DecValTok{100}\NormalTok{)}\SpecialCharTok{*}
+    \FunctionTok{exp}\NormalTok{(linear.priorpred1[,j] }\SpecialCharTok{+} 
+\NormalTok{          unstruc.re.priorpred1[,j] }\SpecialCharTok{+} 
+\NormalTok{          spatial.re.priorpred1[,j])}
+
+  \DocumentationTok{\#\# Prior Predictive Counts}
+\NormalTok{  ypriorpred1[,j] }\OtherTok{\textless{}{-}} \FunctionTok{rpois}\NormalTok{(}\AttributeTok{n =} \DecValTok{100}\NormalTok{, }\AttributeTok{lambda =}\NormalTok{ lambda.priorpred1[,j])}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Ashe, Alleghany, Surry, and Northampton}
+
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+
+\FunctionTok{hist}\NormalTok{(ypriorpred1[}\DecValTok{1}\NormalTok{,], }
+     \AttributeTok{main=}\StringTok{"Ashe: Prior predictive 1"}\NormalTok{, }
+     \AttributeTok{xlab =} \StringTok{"counts"}\NormalTok{,}
+     \AttributeTok{xlim=}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, nc\_sf}\SpecialCharTok{$}\NormalTok{SID74[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{+} \DecValTok{1500}\NormalTok{))}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{v=}\NormalTok{nc\_sf}\SpecialCharTok{$}\NormalTok{SID74[}\DecValTok{1}\NormalTok{], }\AttributeTok{lwd=}\DecValTok{3}\NormalTok{, }\AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
+\FunctionTok{text}\NormalTok{(}\DecValTok{500}\NormalTok{, }\DecValTok{20}\NormalTok{, }\FunctionTok{paste}\NormalTok{(}\StringTok{"Number of NAs:"}\NormalTok{, }\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(ypriorpred1[}\DecValTok{1}\NormalTok{,]))))}
+
+\FunctionTok{hist}\NormalTok{(ypriorpred1[}\DecValTok{2}\NormalTok{,], }
+     \AttributeTok{main=}\StringTok{"Alleghany: Prior predictive 1"}\NormalTok{, }
+     \AttributeTok{xlab =} \StringTok{"counts"}\NormalTok{,}
+     \AttributeTok{xlim=}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, nc\_sf}\SpecialCharTok{$}\NormalTok{SID74[}\DecValTok{2}\NormalTok{] }\SpecialCharTok{+} \DecValTok{10}\NormalTok{))}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{v=}\NormalTok{nc\_sf}\SpecialCharTok{$}\NormalTok{SID74[}\DecValTok{2}\NormalTok{], }\AttributeTok{lwd=}\DecValTok{3}\NormalTok{, }\AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
+\FunctionTok{text}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{20}\NormalTok{, }\FunctionTok{paste}\NormalTok{(}\StringTok{"Number of NAs:"}\NormalTok{, }\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(ypriorpred1[}\DecValTok{2}\NormalTok{,]))))}
+
+\FunctionTok{hist}\NormalTok{(ypriorpred1[}\DecValTok{3}\NormalTok{,], }
+     \AttributeTok{main=}\StringTok{"Surry: Prior predictive 1"}\NormalTok{, }
+     \AttributeTok{xlab =} \StringTok{"counts"}\NormalTok{,}
+     \AttributeTok{xlim=}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, nc\_sf}\SpecialCharTok{$}\NormalTok{SID74[}\DecValTok{3}\NormalTok{] }\SpecialCharTok{+} \DecValTok{20}\NormalTok{)}
+\NormalTok{     )}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{v=}\NormalTok{nc\_sf}\SpecialCharTok{$}\NormalTok{SID74[}\DecValTok{3}\NormalTok{], }\AttributeTok{lwd=}\DecValTok{3}\NormalTok{, }\AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
+\FunctionTok{text}\NormalTok{(}\DecValTok{15}\NormalTok{, }\DecValTok{20}\NormalTok{, }\FunctionTok{paste}\NormalTok{(}\StringTok{"Number of NAs:"}\NormalTok{, }\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(ypriorpred1[}\DecValTok{3}\NormalTok{,]))))}
+
+\FunctionTok{hist}\NormalTok{(ypriorpred1[}\DecValTok{5}\NormalTok{,], }
+     \AttributeTok{main=}\StringTok{"Northampton: Prior predictive 1"}\NormalTok{, }
+     \AttributeTok{xlab =} \StringTok{"counts"}\NormalTok{, }
+     \AttributeTok{xlim=}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, nc\_sf}\SpecialCharTok{$}\NormalTok{SID74[}\DecValTok{5}\NormalTok{] }\SpecialCharTok{+} \DecValTok{100000}\NormalTok{))}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{v=}\NormalTok{nc\_sf}\SpecialCharTok{$}\NormalTok{SID74[}\DecValTok{5}\NormalTok{], }\AttributeTok{lwd=}\DecValTok{3}\NormalTok{, }\AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
+\FunctionTok{text}\NormalTok{(}\DecValTok{50000}\NormalTok{, }\DecValTok{20}\NormalTok{, }\FunctionTok{paste}\NormalTok{(}\StringTok{"Number of NAs:"}\NormalTok{, }\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(ypriorpred1[}\DecValTok{5}\NormalTok{,]))))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework2_files/figure-latex/unnamed-chunk-29-1.pdf}
+
+\hypertarget{question-4.2}{%
+\section{Question 4.2:}\label{question-4.2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# Values of E\_i and neighborhood structure}
+\NormalTok{counties }\OtherTok{\textless{}{-}}\NormalTok{ nc\_sf}\SpecialCharTok{$}\NormalTok{CNTY\_}
+\NormalTok{neighbor.nc }\OtherTok{\textless{}{-}} \FunctionTok{poly2nb}\NormalTok{(nc\_sf)}
+
+\NormalTok{prior.fixed2\_model2 }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\AttributeTok{mean.intercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{prec.intercept =} \FloatTok{0.01}\NormalTok{,}
+                    \AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{prec =} \FloatTok{0.01}\NormalTok{)}
+\NormalTok{prior.prec2\_model2 }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\AttributeTok{prec =} \FunctionTok{list}\NormalTok{(}\AttributeTok{prior =} \StringTok{"loggamma"}\NormalTok{, }
+                               \AttributeTok{param =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{)))}
+
+\FunctionTok{nb2INLA}\NormalTok{(}\StringTok{"nc.adj"}\NormalTok{, neighbor.nc)}
+\NormalTok{g }\OtherTok{\textless{}{-}} \FunctionTok{inla.read.graph}\NormalTok{(}\AttributeTok{filename =} \StringTok{"nc.adj"}\NormalTok{)}
+
+\NormalTok{nc\_sf}\SpecialCharTok{$}\NormalTok{re\_u }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(nc\_sf)}
+\NormalTok{nc\_sf}\SpecialCharTok{$}\NormalTok{re\_v }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(nc\_sf)}
+
+\NormalTok{formula1 }\OtherTok{\textless{}{-}}\NormalTok{ deaths }\SpecialCharTok{\textasciitilde{}}
+  \FunctionTok{f}\NormalTok{(re\_u, }\AttributeTok{model =} \StringTok{"besag"}\NormalTok{, }\AttributeTok{graph =}\NormalTok{ g, }
+    \AttributeTok{hyper =} \FunctionTok{list}\NormalTok{(}\AttributeTok{prec =} \FunctionTok{list}\NormalTok{(}\AttributeTok{prior =} \StringTok{"loggamma"}\NormalTok{,}\AttributeTok{param =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{)))) }\SpecialCharTok{+} 
+  \FunctionTok{f}\NormalTok{(re\_v, }\AttributeTok{model =} \StringTok{"iid"}\NormalTok{, }
+    \AttributeTok{hyper =} \FunctionTok{list}\NormalTok{(}\AttributeTok{prec =} \FunctionTok{list}\NormalTok{(}\AttributeTok{prior =} \StringTok{"loggamma"}\NormalTok{,}\AttributeTok{param =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{))))}
+
+\CommentTok{\#model1 \textless{}{-} inla(formula = formula1,}
+                            \CommentTok{\#data = data.frame(latcab),}
+                            \CommentTok{\#control.fixed = prior.fixed2\_model2,}
+                            \CommentTok{\#control.family = list(hyper = list(prec = prior.prec2\_model2)),}
+                            \CommentTok{\#control.compute=list(config = TRUE))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-4.3}{%
+\section{Question 4.3:}\label{question-4.3}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#nc\_sf$popr1.1 \textless{}{-} ypostpred1[,1]}
+\end{Highlighting}
+\end{Shaded}
+
+
+\end{document}

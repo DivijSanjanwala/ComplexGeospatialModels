@@ -1,0 +1,199 @@
+---
+title: "Homework 1 - Divij Sanjanwala"
+output: html_document
+always_allow_html: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+```{r}
+## R packages 
+setwd(getwd())
+library(rmarkdown)
+library(tmap) ## Very commonly used -- to make static and interactive plots
+library(mapview)
+library(leaflet)
+library(raster)
+library(shiny)
+library(tidyverse)
+library(spDataLarge) ## Data sets -- use commands in notes to download
+library(spData) ## Data sets
+library(sf) ## simple features 
+```
+## Question 1
+Use the `World` data set available in the R package `tmap`.
+
+# Question 1.1
+What type of spatial object is the `World` data set? What is the CRS?
+
+```{r}
+# What type of spatial object is the World data set?
+data("World")
+class(World)
+World
+```
+The object `World` has the class `SpatialPolygonsDataFrame`. This is a spatial object that contains a data frame and a spatial polygon object. 
+
+The data frame contains the data for each country, and the spatial polygon object contains the geometry for each country. 
+
+The CRS for the object `World` is `+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0`.
+This is obvious through the R output `Geodetic CRS:  WGS 84`
+
+## Question 1.2:
+Using the projection argument of tm_shape(), create maps of the World data set with two other projections. State what aspect(s) are preserved with the projections you use. Comment on the visual differences and
+biases across the three maps.
+
+```{r}
+# This makes the plots statis.
+tmap_mode('plot')
+# Using the projection argument of tm_shape(), create maps of the World data set with two other projections.
+
+# 1st Map using projection = WGS84 (The standard projection of the default in the World Data set) ie: Latitude/Longitude
+map1 <- tm_shape(World) + tm_polygons() + tm_layout("WGS84 (The standard projection of the default in the World Data set).", inner.margins=c(0,0,.1,0), title.size=.8)
+
+# 2nd Map using projection = eck4 ie: Latitude/Longitude
+# Eckert IV is an equal-area pseudocylindrical map projection for world maps. The lateral meridians are semicircles, which give the projection a rounded shape and smooth corners where the lateral meridians meet the pole lines. This projection is commonly used for thematic and other world maps requiring accurate areas.
+map2 <- tm_shape(World, projection="+proj=eck4") + tm_polygons() + tm_layout("Eckhart IV projection. Recommended in statistical maps for its equal-area property.", inner.margins=c(0,0,.1,0), title.size=.8)
+
+# 3rd Map using robin ie: Latitude/Longitude
+# It is an arithmetic mean of projected coordinates of Aitoff and equidistant cylindrical projections. The projection is known to have one of the lowest mean scale and area distortions among compromise projections for small-scale mapping. It has been used by the National Geographic Society since 1998 for general world maps.
+map3 <- tm_shape(World, projection="+proj=robin") + tm_polygons() + tm_layout("Winkel-Tripel projection, adapted as default by the National Geographic Society for world maps.", inner.margins=c(0,0,.1,0), title.size=.8)
+map1
+map2
+map3
+```
+State what aspect(s) are preserved with the projections you use:
+
+The Earth's surface cannot be flattened without distorting geometrical properties, such as area, shape, distance and direction.
+
+1. `WGS84` preserves the direction and the shape of data
+2. `Eckhart IV projection (+proj=eck4)` preserves the area
+3. `Winkel-Tripel projection (+proj=robin)` minimizes three kinds of distortion: area, direction, and distance.
+
+Comment on the visual differences and biases across the three maps:
+
+The `WGS84` seems like a map made on a 2D surface, where the spherical nature of Earth is not preserved, whereas the other two, `Eckhart IV projection (+proj=eck4)` and `Winkel-Tripel projection (+proj=robin)` have the speherical propoerty visible. Antarctica looks much bigger compared to its actual size in the `WGS84`, although the `Eckhart IV projection (+proj=eck4)` preserves the equal-area and tries to depict Antarctica's actual size on Earth. `Winkel-Tripel projection (+proj=robin)`.
+
+`WGS84` seems to be biased towards focussing more on getting the longitude/latidude of the locations correct compared the the area that they span on Earth. 
+
+`Winkel-Tripel projection (+proj=robin)` seems to do a worse job at preserving area and represents the shapes are slightly stretched than the actual, although would have better focus on minimizing the distortion in the logitude/latitudes and distance than `Eckhart IV projection (+proj=eck4)`.
+
+## Question 1.3
+
+The ‘World’ data set contains a column labeled “HPI” that stands for Happy Planet Index. Information
+about this metric can be found here: http://happyplanetindex.org Make a four panel map that plots: HPI,
+life expectancy, footprint and inequality.
+
+```{r}
+# 4 panel map chosen with ncol and nrow set accordingly.
+tmap_mode("view")
+tm_shape(World) +
+    tm_polygons(c("HPI", "life_exp", "footprint", "inequality")) +
+    tm_facets(sync = TRUE, nrow = 2, ncol = 2) +
+    tm_layout(bg.color="lightblue",
+            earth.boundary = TRUE,
+            space.color="grey90")
+```
+
+# Question 2
+
+Altitude data for the USA can be obtained using the raster R package:
+```{r}
+usa_elev <- raster::getData('alt', country='USA', level=1)
+oahu <- crop(usa_elev[[4]], extent(-158.330079, -157.646180, 21.241392, 21.711673))
+
+```
+
+Select the altitude data for Oahu, Hawaii, only.
+
+## Question 2.1:
+
+Make the altitude data for Oahu into a spatial object with geometry type points. Include R code used and
+output of the data set to show that it is in fact now a spatial object. Do not forget to select a CRS.
+
+```{r}
+oahu <- rasterToPoints(oahu)
+
+# CRS selected below, 
+dsp <- sf::st_as_sf(data.frame(oahu), coords=c("x", "y"),
+crs=4326) %>% st_transform()
+dsp
+```
+
+## Question 2.2:
+
+Using a basemap of your choosing, plot the altitude points onto a map of Oahu. Allow the points to change
+colors by altitude. Include R code used.
+
+```{r}
+# toggle the "layers" button to select eart/world background view!
+# plot dsp using tm_shape()
+tmap_mode("view")
+# Base map chosen and made interactive, and points change color by altitude!
+tm_shape(dsp) + 
+  tm_dots(c("USA4_msk_alt"), 
+          border.alpha = 0, 
+          palette=c("#E1F5C4", "#EDE574", "#F9D423", "#FC913A", "#FF4E50"), 
+          stretch.palette = TRUE)
+
+```
+
+## Question 2.3:
+
+Convert the spatial object into a raster, and plot the raster. Include R code and show that the object is now a raster.
+
+```{r}
+# Convert points to sp (assumes that the sf object is called example_points)
+tmap_mode("view")
+oahu_points <- as(dsp, "Spatial")
+# create an empty raster layer
+empty_raster <- raster(nrow = 56, 
+                      ncol = 82,
+                      xmn = -158.330079, 
+                      xmx = -157.646180, 
+                      ymn = 21.241392, 
+                      ymx = 21.711673)
+
+oahu_raster <- rasterize(oahu_points, empty_raster)
+# Taking only the useful dimension of USA4_msk_alt, ID not required.
+oahu_raster <- oahu_raster$USA4_msk_alt
+# Showing the output of the raster, showing it's a RasterLayer Object.
+oahu_raster
+```
+
+```{r}
+# Plotting the raster!
+tm_shape(oahu_raster) + tm_raster()
+```
+
+## Question 2.4:
+
+Download the data for organic matter at https://gis.ctahr.hawaii.edu/SoilAtlas#downloads. What soil orders of organic matters exist at altitudes of > 500 m? Make a map of the organic matter soil orders for
+altitudes > 500 m. Include R code.
+```{r}
+tmap_mode("view")
+organic <- read_sf('./OrganicMatter/OrganicMatter_State.shp')
+# filter dsp for altitude > 500
+dsp_500 <- dsp %>% filter(USA4_msk_alt > 500)
+# oahu_points_organic <- as(dsp_500, "Spatial")
+dsp_500 <- sf::st_transform(dsp_500, crs=st_crs(organic))
+oahuorganic <- sf::st_join(x = dsp_500, y=organic[dsp_500, c("SoilOrder")], join=st_intersects)[1+2*(0:1912), ]
+
+tm_shape(oahuorganic) + 
+  tm_dots(c("SoilOrder"), 
+          border.alpha = 0, 
+          palette=c("blue", "yellow", "purple", "black", "red", "orange"), 
+          stretch.palette = TRUE)
+```
+
+## Question 3.1:
+
+Using the R packages tmap or mapview, make the plot in Question 1.4 interactive.
+Done using `tmap_mode('view')` :)
+
+## Question 3.2:
+
+Using the R packages tmap or mapview, make the plot in Question 2.2 interactive.
+Done using `tmap_mode('view')` :)

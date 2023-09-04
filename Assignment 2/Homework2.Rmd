@@ -1,0 +1,879 @@
+---
+title: "Homework 2 - Divij Sanjanwala"
+output: html_document
+always_allow_html: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+```{r}
+## R packages 
+setwd(getwd())
+library(SpatialEpi)
+library(tidyverse)
+library(sf)
+library(spdep)
+library(rmarkdown)
+library(INLA)
+library(tmap) ## Very commonly used -- to make static and interactive plots
+library(mapview)
+library(cowplot)
+library(reshape2)
+library(leaflet)
+library(raster)
+library(shiny)
+library(tidyverse)
+library(spDataLarge) ## Data sets -- use commands in notes to download
+library(spData) ## Data sets
+library(sf) ## simple features 
+```
+# Question 1.1:
+
+## For the three following sets of prior distributions, generate 20 data sets from the respective prior predictive distribution.
+```{r}
+#-----------------------------------------------
+# Setting the values of the parameters
+#-----------------------------------------------
+beta0 <- 1
+beta1 <- 0.5
+sigma <- 1
+#-----------------------------------------------
+# Simulating covariate values + data
+#-----------------------------------------------
+set.seed(17)
+x <- runif(n = 100, min = 1, max=5)
+y.mean <- beta0 + beta1*x
+y <- rnorm(n = 100, 
+           mean = y.mean, 
+           sd = sigma)
+sim.data <- tibble(x,y, y.mean)
+#-----------------------------------------------
+```
+
+- Simulation for prior distribution candidate:
+$$\begin{equation}
+\beta_0 \sim N\left(0, \sigma_{\beta_0}=1\right), \beta_1 \sim N\left(0, \sigma_{\beta_1}=1\right), \sigma \sim \text { Gamma }(\text { shape }=1, \text { scale }=1)
+\end{equation}$$
+
+```{r}
+set.seed(17)
+n <- 100
+
+sigma <- rgamma(1, shape = 1, scale = 1)
+beta0 <- rnorm(1, mean = 0, sd = 1)
+beta1 <- rnorm(1, mean = 0, sd = 1)
+
+x <- runif(n = 100, min = 1, max=5)
+y.mean <- beta0 + beta1*x
+
+sim.data20_1 <- tibble(x = rep(x, 20), 
+              y.mean = rep(y.mean, 20), 
+              y.sim = rnorm(n = 20*100, 
+                            mean = y.mean, 
+                            sd = sigma), 
+              group = rep(1:20, each = 100))
+
+ggplot(data = sim.data20_1, aes(x,y.sim)) + 
+  geom_point() + 
+  geom_line(aes(x,y.mean), col="blue") + 
+  ylab("Simulated Data") + 
+  facet_wrap(~group) +
+  theme_bw()
+```
+
+```{r}
+beta0_1 = mean(dnorm(0, 1))
+beta1_1 = mean(dnorm(0, 1))
+sigma_1 = mean(dgamma(1, 1))
+
+ggplot(data.frame(bx = seq(-12, 12, length.out = 100)), aes(bx)) +
+  stat_function(fun = dnorm, args = list(mean = 0, sd = 1), aes(color = "Beta_0")) + 
+  stat_function(fun = dnorm, args = list(mean = 0, sd = 1), aes(color = "Beta_1")) + 
+  stat_function(fun = dgamma, args=list(shape = 1, scale =1), aes(color = "Sigma")) +
+  geom_vline(xintercept = beta0_1, linetype = "dashed", colour = "red") +
+  geom_vline(xintercept = beta1_1, linetype = "dashed", colour = "blue") +
+  geom_vline(xintercept = sigma_1, linetype = "dashed", colour = "green") +
+  ylab("density") + 
+  xlab("x") + 
+  scale_color_manual(values = c("red", "blue", "green"), 
+                     labels = c("Beta_0", "Beta_1", "Sigma")) +
+  labs(title = "Prior distributions for Beta_0, Beta_1, and Sigma",
+       x = "Prior Value",
+       y = "Density",
+       color = "Priors")
+```
+
+- Simulation for prior distribution candidate:
+$$\begin{equation}
+\beta_0 \sim N\left(0, \sigma_{\beta_0}=1000\right), \beta_1 \sim N\left(0, \sigma_{\beta_1}=1000\right), \sigma \sim \text { Gamma }(\text {shape}=1000, \text {scale}=1000)
+\end{equation}$$
+
+```{r}
+set.seed(17)
+n <- 100
+
+sigma <- rgamma(1, shape = 1000, scale = 1000)
+beta0 <- rnorm(1, mean = 0, sd = 1000)
+beta1 <- rnorm(1, mean = 0, sd = 1000)
+
+x <- runif(n = 100, min = 1, max=5)
+y.mean <- beta0 + beta1*x
+
+sim.data20_2 <- tibble(x = rep(x, 20), 
+                       y.mean = rep(y.mean, 20), 
+                       y.sim = rnorm(n = 20*100, mean = y.mean, sd = sigma), 
+                       group = rep(1:20, each = 100))
+
+ggplot(data = sim.data20_2, aes(x,y.sim)) + 
+  geom_point() + 
+  geom_line(aes(x,y.mean), col="blue") + 
+  ylab("Simulated Data") + 
+  facet_wrap(~group) +
+  theme_bw()
+```
+
+```{r}
+beta0_2 = mean(dnorm(0, 1000))
+beta1_2 = mean(dnorm(0, 1000))
+sigma_2 = mean(dgamma(1000, 1000))
+
+ggplot(data.frame(bx = seq(-100000, 100000, length.out = 100)), aes(bx)) +
+  stat_function(fun = dnorm, args = list(mean = 0, sd = 1000), aes(color = "Beta_0")) + 
+  stat_function(fun = dnorm, args = list(mean = 0, sd = 1000), aes(color = "Beta_1")) + 
+  stat_function(fun = dgamma, args=list(shape = 1000, scale =1000), aes(color = "Sigma")) +
+  geom_vline(xintercept = beta0_2, linetype = "dashed", colour = "red") +
+  geom_vline(xintercept = beta1_2, linetype = "dashed", colour = "blue") +
+  geom_vline(xintercept = sigma_2, linetype = "dashed", colour = "green") +
+  ylab("density") + 
+  xlab("x") + 
+  scale_color_manual(values = c("red", "blue", "green"), 
+                     labels = c("Beta_0", "Beta_1", "Sigma")) +
+  labs(title = "Prior distributions for Beta_0, Beta_1, and Sigma",
+       x = "Prior Value",
+       y = "Density",
+       color = "Priors")
+```
+
+- Simulation for prior distribution candidate:
+$$\begin{equation}
+\beta_0 \sim Unif\left(0, 1\right), \beta_1 \sim Unif\left(-1, 0\right), \sigma \sim \text { Exp }(1)
+\end{equation}$$
+
+```{r}
+set.seed(17)
+n <- 100
+data_sets <- list()
+
+sigma <- rexp(1, rate = 1)
+beta0 <- runif(1, min = 0, max = 1)
+beta1 <- runif(1, min = -1, max = 0)
+  
+x <- runif(n = 100, min = 1, max=5)
+y.mean <- beta0 + beta1*x
+
+sim.data20_3 <- tibble(x = rep(x, 20), 
+              y.mean = rep(y.mean, 20), 
+              y.sim = rnorm(n = 20*100, 
+                            mean = y.mean, 
+                            sd = sigma), 
+              group = rep(1:20, each = 100))
+
+
+ggplot(data = sim.data20_3, aes(x,y.sim)) + 
+  geom_point() + 
+  geom_line(aes(x,y.mean), col="blue") + 
+  ylab("Simulated Data") + 
+  facet_wrap(~group) +
+  theme_bw()
+```
+
+
+```{r}
+beta0_3 = mean(dunif(0, 1))
+beta1_3 = mean(dunif(-1, 0))
+sigma_3 = mean(dexp(1))
+
+ggplot(data.frame(bx = seq(-12, 12, length.out = 100)), aes(bx)) +
+  stat_function(fun = dunif, args = list(min = 0, max = 1), aes(color = "Beta_0")) + 
+  stat_function(fun = dunif, args = list(min = -1, max = 0), aes(color = "Beta_1")) + 
+  stat_function(fun = dexp, args=list(rate = 1), aes(color = "Sigma")) +
+  geom_vline(xintercept = beta0_3, linetype = "dashed", colour = "red") +
+  geom_vline(xintercept = beta1_3, linetype = "dashed", colour = "blue") +
+  geom_vline(xintercept = sigma_3, linetype = "dashed", colour = "green") +
+  ylab("density") + 
+  xlab("x") + 
+  scale_color_manual(values = c("red", "blue", "green"), 
+                     labels = c("Beta_0", "Beta_1", "Sigma")) +
+  labs(title = "Prior distributions for Beta_0, Beta_1, and Sigma",
+       x = "Prior Value",
+       y = "Density",
+       color = "Priors")
+  
+```
+The best choice of the betas and sigma combinations would be to consider:
+
+$$\begin{equation}
+\beta_0 \sim N\left(0, \sigma_{\beta_0}=1\right), \beta_1 \sim N\left(0, \sigma_{\beta_1}=1\right), \sigma \sim \text { Gamma }(\text { shape }=1, \text { scale }=1)
+\end{equation}$$
+
+This is because, simulated plots seem to uniformly fit the mean line and have a clear pattern across the datasets. Considering the density plots as well, they appear to be close to the true value of the mean. This translates into effective simulations.
+# Question 1.2:
+
+```{r}
+#-----------------------------------------------
+# Setting the values of the parameters
+#-----------------------------------------------
+set.seed(17)
+nu.mu <- 2
+tau.mu <- 0.5
+nu.beta <- -1
+tau.beta <- 0.5
+mu.hm <- rnorm(n=20, mean = nu.mu, sd=tau.mu)
+beta.hm <- rnorm(n=20, mean = nu.beta, sd= tau.beta)
+sigma <- 1
+#-----------------------------------------------
+# Simulating covariate values + data
+#-----------------------------------------------
+x.hm <- runif(n = 100, min = 1, max=5)
+y.mean.hier <- c(rep(mu.hm, each = 100) + 
+                   rep(beta.hm, each = 100)*rep(x.hm, 20))
+
+y.hier <- rnorm(n = 20*100, mean = y.mean.hier, sigma)
+sim.data.hier <- tibble(x = rep(x.hm, 20), 
+                        y.hier, y.mean.hier, 
+                        group = paste("Group", rep(1:20, each = 100)))
+```
+
+- Simulation for prior distribution candidate:
+
+$$
+\begin{aligned}
+& \nu_\mu \sim N(0,1), \nu_\beta \sim N(0,1), \tau_\mu \sim \text { Gamma }(\text { shape }=1, \text { scale }=1), \tau_\beta \sim \text { Gamma }(\text { shape }=1, \text { scale }= \\
+& 1), \sigma \sim \text { Gamma }(\text { shape }=1, \text { scale }=1)
+\end{aligned}
+$$
+
+```{r}
+#-----------------------------------------------
+# Setting the values of the parameters
+#-----------------------------------------------
+set.seed(17)
+nu.mu <- rnorm(1, mean=0, sd=1)
+tau.mu <- rgamma(1, shape=1, scale=1)
+nu.beta <- rnorm(1, mean=0, sd=1)
+tau.beta <- rgamma(1, shape=1, scale=1)
+mu.hm <- rnorm(n=20, mean = nu.mu, sd=tau.mu)
+beta.hm <- rnorm(n=20, mean = nu.beta, sd= tau.beta)
+sigma <- rgamma(1, shape=1, scale=1)
+#-----------------------------------------------
+# Simulating covariate values + data
+#-----------------------------------------------
+x.hm <- runif(n = 100, min = 1, max=5)
+y.mean.hier <- c(rep(mu.hm, each = 100) + 
+                   rep(beta.hm, each = 100)*rep(x.hm, 20))
+
+y.hier <- rnorm(n = 20*100, mean = y.mean.hier, sigma)
+sim.data.hier <- tibble(x = rep(x.hm, 20), 
+                        y.hier, y.mean.hier, 
+                        group = paste("Group", rep(1:20, each = 100)))
+
+ggplot(sim.data.hier, aes(x, y.hier)) + 
+  geom_point() + geom_line(aes(x, y.mean.hier), col="blue") + 
+  facet_wrap(~group)
+```
+```{r}
+
+nu.mu <- dnorm(1, mean=0, sd=1)
+tau.mu <- dgamma(1, shape=1, scale=1)
+nu.beta <- dnorm(1, mean=0, sd=1)
+tau.beta <- dgamma(1, shape=1, scale=1)
+sigma <- dgamma(1, shape=1, scale=1)
+
+ggplot(data.frame(bx = seq(-12, 12, length.out = 100)), aes(bx)) +
+  stat_function(fun = dnorm, args = list(mean = 0, sd = 1), aes(color = "nu.mu")) + 
+  stat_function(fun = dgamma, args = list(shape = 1, scale = 1), aes(color = "tau.mu")) + 
+  stat_function(fun = dgamma, args = list(shape = 1, scale = 1), aes(color = "tau.beta")) + 
+  stat_function(fun = dnorm, args = list(mean=0, sd=1), aes(color = "nu.beta")) + 
+  stat_function(fun = dgamma, args=list(shape = 1, scale = 1), aes(color = "Sigma")) +
+  geom_vline(xintercept = nu.mu, linetype = "dashed", colour = "red") +
+  geom_vline(xintercept = tau.mu, linetype = "dashed", colour = "blue") +
+  geom_vline(xintercept = nu.beta, linetype = "dashed", colour = "green") +
+  geom_vline(xintercept = tau.beta, linetype = "dashed", colour = "pink") +
+  geom_vline(xintercept = sigma, linetype = "dashed", colour = "purple") +
+  ylab("density") + 
+  xlab("x") + 
+  scale_color_manual(values = c("red", "blue", "green", "pink", "black", "purple"), 
+                     labels = c("nu.mu", "tau.mu", "tau.beta", "nu.beta", "tau.mu")) +
+  labs(title = "Prior distributions for nu.mu, tau.mu, tau.beta, nu.beta, tau.mu",
+       x = "Prior Value",
+       y = "Density",
+       color = "Priors")
+
+```
+- Simulation for prior distribution candidate:
+
+$$
+\begin{aligned}
+& \nu_\mu \sim N(0,1000), \nu_\beta \sim N(0,1000), \tau_\mu \sim \text { Gamma }(\text { shape }=1000, \text { scale }=1000), \tau_\beta \sim \text { Gamma }(\text { shape }=1, \text { scale }= \\
+& 1000), \sigma \sim \text { Gamma }(\text { shape }=1000, \text { scale }=1000)
+\end{aligned}
+$$
+
+```{r}
+#-----------------------------------------------
+# Setting the values of the parameters
+#-----------------------------------------------
+set.seed(17)
+nu.mu <- rnorm(1, mean=0, sd=1000)
+tau.mu <- rgamma(1, shape=1000, scale=1000)
+nu.beta <- rnorm(1, mean=0, sd=1000)
+tau.beta <- rgamma(1, shape=1, scale=1000)
+mu.hm <- rnorm(n=20, mean = nu.mu, sd=tau.mu)
+beta.hm <- rnorm(n=20, mean = nu.beta, sd= tau.beta)
+sigma <- rgamma(1, shape=1000, scale=1000)
+#-----------------------------------------------
+# Simulating covariate values + data
+#-----------------------------------------------
+x.hm <- runif(n = 100, min = 1, max=5)
+y.mean.hier <- c(rep(mu.hm, each = 100) + 
+                   rep(beta.hm, each = 100)*rep(x.hm, 20))
+
+y.hier <- rnorm(n = 20*100, mean = y.mean.hier, sigma)
+sim.data.hier <- tibble(x = rep(x.hm, 20), 
+                        y.hier, y.mean.hier, 
+                        group = paste("Group", rep(1:20, each = 100)))
+
+ggplot(sim.data.hier, aes(x, y.hier)) + 
+  geom_point() + geom_line(aes(x, y.mean.hier), col="blue") + 
+  facet_wrap(~group)
+```
+
+```{r}
+nu.mu <- rnorm(1, mean=0, sd=1000)
+tau.mu <- rgamma(1, shape=1000, scale=1000)
+nu.beta <- rnorm(1, mean=0, sd=1000)
+tau.beta <- rgamma(1, shape=1, scale=1000)
+sigma <- rgamma(1, shape=1000, scale=1000)
+
+ggplot(data.frame(bx = seq(-12, 12, length.out = 100)), aes(bx)) +
+  stat_function(fun = dnorm, args = list(mean = 0, sd = 1000), aes(color = "nu.mu")) + 
+  stat_function(fun = dgamma, args = list(shape = 1000, scale = 1000), aes(color = "tau.mu")) + 
+  stat_function(fun = dgamma, args = list(shape = 1000, scale = 1000), aes(color = "tau.beta")) + 
+  stat_function(fun = dnorm, args = list(mean=0, sd=1000), aes(color = "nu.beta")) + 
+  stat_function(fun = dgamma, args=list(shape = 1000, scale = 1000), aes(color = "Sigma")) +
+  geom_vline(xintercept = nu.mu, linetype = "dashed", colour = "red") +
+  geom_vline(xintercept = tau.mu, linetype = "dashed", colour = "blue") +
+  geom_vline(xintercept = nu.beta, linetype = "dashed", colour = "green") +
+  geom_vline(xintercept = tau.beta, linetype = "dashed", colour = "pink") +
+  geom_vline(xintercept = sigma, linetype = "dashed", colour = "purple") +
+  ylab("density") + 
+  xlab("x") + 
+  scale_color_manual(values = c("red", "blue", "green", "pink", "black", "purple"), 
+                     labels = c("nu.mu", "tau.mu", "tau.beta", "nu.beta", "tau.mu")) +
+  labs(title = "Prior distributions for nu.mu, tau.mu, tau.beta, nu.beta, tau.mu",
+       x = "Prior Value",
+       y = "Density",
+       color = "Priors")
+```
+
+- Simulation for prior distribution candidate:
+
+$$
+\begin{aligned}
+& \nu_\mu \sim Unif(0,1), \nu_\beta \sim Unif(0,1), \tau_\mu \sim \text { Exp }(1), \tau_\beta \sim \text { Unif }(1), \sigma \sim \text { Unif }(1)
+\end{aligned}
+$$
+
+```{r}
+#-----------------------------------------------
+# Setting the values of the parameters
+#-----------------------------------------------
+set.seed(17)
+nu.mu <- runif(1, min=0, max=1)
+tau.mu <- rexp(1, rate=1)
+nu.beta <- runif(1, min=0, max=1)
+tau.beta <- rexp(1, rate=1)
+mu.hm <- rnorm(n=20, mean = nu.mu, sd=tau.mu)
+beta.hm <- rnorm(n=20, mean = nu.beta, sd= tau.beta)
+sigma <- rexp(1, rate=1)
+#-----------------------------------------------
+# Simulating covariate values + data
+#-----------------------------------------------
+x.hm <- runif(n = 100, min = 1, max=5)
+y.mean.hier <- c(rep(mu.hm, each = 100) + 
+                   rep(beta.hm, each = 100)*rep(x.hm, 20))
+
+y.hier <- rnorm(n = 20*100, mean = y.mean.hier, sigma)
+sim.data.hier <- tibble(x = rep(x.hm, 20), 
+                        y.hier, y.mean.hier, 
+                        group = paste("Group", rep(1:20, each = 100)))
+
+ggplot(sim.data.hier, aes(x, y.hier)) + 
+  geom_point() + geom_line(aes(x, y.mean.hier), col="blue") + 
+  facet_wrap(~group)
+```
+
+```{r}
+
+nu.mu <- runif(1, min=0, max=1)
+tau.mu <- rexp(1, rate=1)
+nu.beta <- runif(1, min=0, max=1)
+tau.beta <- rexp(1, rate=1)
+sigma <- rexp(1, rate=1)
+
+ggplot(data.frame(bx = seq(-12, 12, length.out = 100)), aes(bx)) +
+  stat_function(fun = dunif, args = list(min = 0, max = 1), aes(color = "nu.mu")) + 
+  stat_function(fun = dexp, args = list(1), aes(color = "tau.mu")) + 
+  stat_function(fun = dunif, args = list(min = 0, max = 1), aes(color = "nu.beta")) + 
+  stat_function(fun = dexp, args = list(1), aes(color = "tau.beta")) + 
+  stat_function(fun = dexp, args=list(1), aes(color = "Sigma")) +
+  geom_vline(xintercept = nu.mu, linetype = "dashed", colour = "red") +
+  geom_vline(xintercept = tau.mu, linetype = "dashed", colour = "blue") +
+  geom_vline(xintercept = nu.beta, linetype = "dashed", colour = "green") +
+  geom_vline(xintercept = tau.beta, linetype = "dashed", colour = "pink") +
+  geom_vline(xintercept = sigma, linetype = "dashed", colour = "purple") +
+  ylab("density") + 
+  xlab("x") + 
+  scale_color_manual(values = c("red", "blue", "green", "pink", "black", "purple"), 
+                     labels = c("nu.mu", "tau.mu", "tau.beta", "nu.beta", "tau.mu")) +
+  labs(title = "Prior distributions for nu.mu, tau.mu, tau.beta, nu.beta, tau.mu",
+       x = "Prior Value",
+       y = "Density",
+       color = "Priors")
+
+
+
+
+
+```
+The best choice of the betas and sigma combinations would be to consider:
+
+$$\begin{equation}
+\beta_0 \sim N\left(0, \sigma_{\beta_0}=1\right), \beta_1 \sim N\left(0, \sigma_{\beta_1}=1\right), \sigma \sim \text { Gamma }(\text { shape }=1, \text { scale }=1)
+\end{equation}$$
+
+This is because, simulated plots seem to uniformly fit the mean line and have a clear pattern across the datasets. Considering the density plots as well, they appear to be close to the true value of the mean. This translates into effective simulations.
+# Question 2.1: Fitting a Linear Regression Model
+
+```{r}
+load("bayes-vis.RData")
+## Adding a column with numbers
+GM$super_region_name_dup <- GM$super_region_name
+latcab <- st_as_sf(GM[GM$super_region == 5,])
+```
+
+## First set of priors for linear regression:
+
+- $\beta_0 \sim \mathrm{N}\left(\mu=0, \sigma^2=1 / 0.1\right)$
+- $\beta_1 \sim N\left(\mu=0, \sigma^2=1 / 0.1\right)$
+- $\tau \sim \operatorname{Gamma}(0.01,0.01)$
+
+```{r}
+## Adding in prior distributions
+### Default normal distributions for b0 and b1
+prior.fixed1_model1 <- list(mean.intercept = 0, prec.intercept = 0.1,
+                    mean = 0, prec = 0.1)
+prior.prec1_model1 <- list(prec = list(prior = "loggamma", 
+                               param = c(0.01, 0.01)))
+
+completepool1_model1 <- inla(formula = pm25 ~ 1 + sat_2014, 
+                     data = data.frame(latcab), 
+                     control.fixed = prior.fixed1_model1, 
+                     control.family = list(hyper = list(prec = prior.prec1_model1)),
+                     control.compute=list(config = TRUE))
+
+postdraws.cpool1_model1 <- inla.posterior.sample(1000, completepool1_model1)
+
+# make a dataframe of the posterior draws from 104 to 110
+posterior1_model1 <- data.frame()
+for(j in 1:1000){
+  posterior1_model1 <- rbind(posterior1_model1, postdraws.cpool1_model1[[j]]$latent[104:105])
+  colnames(posterior1_model1) <- c("Intercept", "sat_2014")
+}
+
+# Create a grid of histograms and density plots
+ggplot(melt(posterior1_model1), aes(x=value)) +
+  geom_histogram(aes(y=..density..)) +
+  geom_density() +
+  facet_wrap(~variable, scales="free") +
+  theme_bw()
+```
+```{r}
+summary(posterior1_model1)
+```
+## Second set of priors for linear regression:
+
+- $\beta_0 \sim \mathrm{N}\left(\mu=0, \sigma^2=1 / 0.01\right)$
+- $\beta_1 \sim N\left(\mu=0, \sigma^2=1 / 0.01\right)$
+- $\tau \sim \operatorname{Gamma}(1,1)$
+
+```{r}
+## Adding in prior distributions
+### Default normal distributions for b0 and b1
+prior.fixed1_model2 <- list(mean.intercept = 0, prec.intercept = 0.01,
+                    mean = 0, prec = 0.01)
+prior.prec1_model2 <- list(prec = list(prior = "loggamma", 
+                               param = c(1, 1)))
+
+completepool1_model2 <- inla(formula = pm25 ~ 1 + sat_2014, 
+                     data = data.frame(latcab), 
+                     control.fixed = prior.fixed1_model2, 
+                     control.family = list(hyper = list(prec = prior.prec1_model2)),
+                     control.compute=list(config = TRUE))
+
+postdraws.cpool1_model2 <- inla.posterior.sample(1000, completepool1_model2)
+# make a dataframe of the posterior draws from 104 to 110
+posterior1_model2 <- data.frame()
+for(j in 1:1000){
+  posterior1_model2 <- rbind(posterior1_model2, postdraws.cpool1_model2[[j]]$latent[104:105])
+  colnames(posterior1_model2) <- c("Intercept", "sat_2014")
+}
+
+# Create a grid of histograms and density plots
+ggplot(melt(posterior1_model2), aes(x=value)) +
+  geom_histogram(aes(y=..density..)) +
+  geom_density() +
+  facet_wrap(~variable, scales="free") +
+  theme_bw()
+
+```
+```{r}
+summary(posterior1_model2)
+```
+# Question 2.2: Fitting a Multilevel Regression Model
+
+## First set of priors for multilevel:
+
+- $\beta_0 \sim \mathrm{N}\left(\mu=0, \sigma^2=1 / 0.1\right)$
+- $\beta_1 \sim N\left(\mu=0, \sigma^2=1 / 0.1\right)$
+- $\tau \sim \operatorname{Gamma}(0.01,0.01)$
+- $\tau_\mu \sim \operatorname{Gamma}(0.01,0.01)$
+- $\tau_\beta \sim \operatorname{Gamma}(0.01,0.01)$
+
+```{r}
+### Default normal distributions for b0 and b1
+prior.fixed2_model1 <- list(mean.intercept = 0, prec.intercept = 0.1,
+                    mean = 0, prec = 0.1)
+prior.prec2_model1 <- list(prec = list(prior = "loggamma", 
+                               param = c(0.01, 0.01)))
+
+partialpool2_model1 <- inla(formula = pm25 ~ 1 +    
+                       f(super_region_name,  
+                         model = "iid", 
+                         hyper = prior.prec2_model1) + 
+                       f(super_region_name_dup, sat_2014, 
+                         model = "iid",
+                         hyper = prior.prec2_model1), 
+                     data = data.frame(GM), 
+                     control.fixed = prior.fixed2_model1,
+                     control.family = list(hyper = list(prec = prior.prec2_model1)), 
+                    control.compute = list(config = TRUE))
+
+postdraws.cpool2_model1 <- inla.posterior.sample(1000, partialpool2_model1)
+
+# make a dataframe of the posterior draws from 104 to 110
+posterior2_model1 <- data.frame()
+for(j in 1:1000){
+  posterior2_model1 <- rbind(posterior2_model1, postdraws.cpool2_model1[[j]]$latent[104:110])
+  colnames(posterior2_model1) <- c("super_region_name:1", "super_region_name:2", "super_region_name:3", "super_region_name:4", "super_region_name:5", "super_region_name:6", "super_region_name:7")
+}
+
+# Create a grid of histograms and density plots
+ggplot(melt(posterior2_model1), aes(x=value)) +
+  geom_histogram(aes(y=..density..)) +
+  geom_density() +
+  facet_wrap(~variable, scales="free") +
+  theme_bw()
+```
+
+```{r}
+summary(posterior2_model1)
+```
+## Second set of priors:
+
+- $\beta_0 \sim \mathrm{N}\left(\mu=0, \sigma^2=1 / 0.01\right)$
+- $\beta_1 \sim N\left(\mu=0, \sigma^2=1 / 0.01\right)$
+- $\tau \sim \operatorname{Gamma}(1,1)$
+- $\tau_\mu \sim \operatorname{Gamma}(1,1)$
+- $\tau_\beta \sim \operatorname{Gamma}(1,1)$
+
+```{r}
+### Default normal distributions for b0 and b1
+prior.fixed2_model2 <- list(mean.intercept = 0, prec.intercept = 0.01,
+                    mean = 0, prec = 0.01)
+prior.prec2_model2 <- list(prec = list(prior = "loggamma", 
+                               param = c(1, 1)))
+
+partialpool2_model1 <- inla(formula = pm25 ~ 1 + 
+                              f(super_region_name, 
+                                model = "iid", 
+                                hyper = prior.prec2_model2) + 
+                              f(super_region_name_dup, sat_2014, 
+                                model = "iid",
+                                hyper = prior.prec2_model2), 
+                            data = data.frame(latcab),
+                            control.fixed = prior.fixed2_model2,
+                            control.family = list(hyper = list(prec = prior.prec2_model2)),
+                            control.compute=list(config = TRUE))
+
+postdraws.cpool2_model2 <- inla.posterior.sample(1000, partialpool2_model1)
+
+# make a dataframe of the posterior draws from 104 to 110
+posterior2_model2 <- data.frame()
+for(j in 1:1000){
+  posterior2_model2 <- rbind(posterior2_model2, postdraws.cpool2_model2[[j]]$latent[104:110])
+  colnames(posterior2_model2) <- c("super_region_name:1", "super_region_name:2", "super_region_name:3", "super_region_name:4", "super_region_name:5", "super_region_name:6", "super_region_name:7")
+}
+
+# Create a grid of histograms and density plots
+ggplot(melt(posterior2_model2), aes(x=value)) +
+  geom_histogram(aes(y=..density..)) +
+  geom_density() +
+  facet_wrap(~variable, scales="free") +
+  theme_bw()
+```
+
+
+```{r}
+summary(posterior2_model2)
+```
+
+# Question 3.1:
+
+```{r}
+postdraws.cpool1_model1 <- inla.posterior.sample(100, completepool1_model1)
+postdraws.cpool2_model2 <- inla.posterior.sample(100, completepool1_model2)
+
+samples_1 <- data.frame()
+for(j in 1:100){
+  samples_1 <- rbind(samples_1, postdraws.cpool1_model1[[j]]$latent[104:105])
+  colnames(samples_1) <- c("Intercept", "sat_2014")
+}
+
+
+beta0_sample_1 <- rnorm(100, mean=0, sd = 1)
+beta1_sample_1 <- rnorm(100, mean=0, sd = 1)
+tau1_sample_1 <- rgamma(100, shape = 0.01, scale = 0.01)
+
+y_1_simulation <- beta0_sample_1 + samples_1$sat_2014*beta1_sample_1 + samples_1$Intercept + tau1_sample_1
+# Create a grid of histograms and density plots
+
+samples_2 <- data.frame()
+for(j in 1:100){
+  samples_2 <- rbind(samples_2, postdraws.cpool1_model2[[j]]$latent[104:105])
+  colnames(samples_2) <- c("Intercept", "sat_2014")
+}
+
+beta0_sample_2 <- rnorm(100, mean=0, sd = 1)
+beta1_sample_2 <- rnorm(100, mean=0, sd = 1)
+tau1_sample_2 <- rgamma(100, shape = 0.01, scale = 0.01)
+
+y_2_simulation <- beta0_sample_2 + samples_2$sat_2014*beta1_sample_2 + samples_2$Intercept + tau1_sample_2
+
+plot1 <- ggplot(data.frame(y_1_simulation), aes(x=y_1_simulation)) +
+  geom_histogram(aes(y=..density..)) +
+  geom_density() +
+  theme_bw()
+
+plot2 <- ggplot(data.frame(y_2_simulation), aes(x=y_2_simulation)) +
+  geom_histogram(aes(y=..density..)) +
+  geom_density() +
+  theme_bw()
+
+
+plot_grid(plot1, plot2, ncol = 2)
+```
+The simulated data appears to to near about the same as the actual data shown in the Q2.2 histograms. Once we multiply the predictors with the hyperparameter estimates, we roughly get a similar histogram for both the models.
+
+# Question 3.2:
+
+```{r}
+postdraws.cpool2_model1 <- inla.posterior.sample(100, completepool1_model1)
+postdraws.cpool2_model2 <- inla.posterior.sample(100, completepool1_model2)
+
+samples_1_1 <- data.frame()
+for(j in 1:100){
+  samples_1_1 <- rbind(samples_1_1, postdraws.cpool2_model1[[j]]$latent[104:110])
+  colnames(samples_1) <- c("Intercept", "sat_2014")
+}
+
+
+beta0_sample_1 <- rnorm(100, mean=0, sd = 1)
+beta1_sample_1 <- rnorm(100, mean=0, sd = 1)
+tau1_sample_1 <- rgamma(100, shape = 0.01, scale = 0.01)
+
+y_1_simulation <- beta0_sample_1 + samples_1$sat_2014*beta1_sample_1 + samples_1$Intercept + tau1_sample_1
+# Create a grid of histograms and density plots
+
+samples_2 <- data.frame()
+for(j in 1:100){
+  samples_2 <- rbind(samples_2, postdraws.cpool1_model2[[j]]$latent[104:110])
+  colnames(samples_2) <- c("Intercept", "sat_2014")
+}
+
+beta0_sample_2 <- rnorm(100, mean=0, sd = 1)
+beta1_sample_2 <- rnorm(100, mean=0, sd = 1)
+tau1_sample_2 <- rgamma(100, shape = 0.01, scale = 0.01)
+
+y_2_simulation <- beta0_sample_2 + samples_2$sat_2014*beta1_sample_2 + samples_2$Intercept + tau1_sample_2
+
+plot1 <- ggplot(data.frame(y_1_simulation), aes(x=y_1_simulation)) +
+  geom_histogram(aes(y=..density..)) +
+  geom_density() +
+  theme_bw()
+
+plot2 <- ggplot(data.frame(y_2_simulation), aes(x=y_2_simulation)) +
+  geom_histogram(aes(y=..density..)) +
+  geom_density() +
+  theme_bw()
+
+
+plot_grid(plot1, plot2, ncol = 2)
+
+```
+The simulated data appears to to near about the same as the actual data shown in the Q2.2 histograms. Once we multiply the predictors with the hyperparameter estimates, we roughly get a similar histogram for both the models.  
+# Question 4.1:
+
+```{r}
+library(sf)
+library(tmap)
+nc_sf <- st_read(system.file("shape/nc.shp", package="sf"),
+quiet=TRUE)
+st_crs(nc_sf)
+
+global_rate <- sum(nc_sf$SID74)/sum(nc_sf$BIR74)
+nc_sf$Expected <- global_rate * nc_sf$BIR74
+
+tm_shape(nc_sf) + tm_fill("SID74")
+tm_shape(nc_sf) + tm_fill("Expected")
+```
+
+
+```{r}
+neighbor.nc <- poly2nb(nc_sf)
+data(pennLC)
+Wmat <- matrix(0, nrow=100, ncol=100)
+for(m in 1:100){
+  Wmat[m,neighbor.nc[[m]]] <- 1
+  Wmat[neighbor.nc[[m]],m] <- 1
+}  
+Dmat <- diag(sapply(1:100, function(i) length(neighbor.nc[[i]])))
+
+### Prior set 1
+beta0.pr1 <- rnorm(n=100, mean=0, sd=1)
+beta1.pr1 <- rnorm(n=100, mean=0, sd=1)
+tauv.pr1 <- rgamma(n=100, shape=1, scale=1)
+tauu.pr1 <- rgamma(n=100, shape=1, scale=1)
+
+
+## Prior predictive 1
+unstruc.re.priorpred1 <- matrix(NA, nrow=100, ncol=100)
+spatial.re.priorpred1 <- matrix(NA, nrow=100, ncol=100)
+lambda.priorpred1 <- matrix(NA, nrow=100, ncol=100)
+ypriorpred1 <- matrix(NA, nrow=100, ncol=100)
+
+linear.priorpred1 <- beta0.pr1 + beta1.pr1*matrix(nc_sf$Expected, nrow=100, ncol=100) 
+
+for(j in 1:100){
+  
+  ## Unstructured Random Effect
+  unstruc.re.priorpred1[,j] <- rnorm(n=100, mean=0, sd=1/sqrt(tauv.pr1[j])) 
+
+  ## Structured Random Effect
+  Qmat <- tauu.pr1[j]*(Dmat-Wmat) 
+  Qmat.eigen <- eigen(Qmat)
+  eigen.diag.comp <- 1/sqrt(Qmat.eigen$values)
+  ### numerical instability
+  eigen.diag.comp[is.na(eigen.diag.comp)] <- 0
+  x <- Qmat.eigen$vectors%*%
+    diag(eigen.diag.comp)%*%
+    matrix(rnorm(n=100, mean=0, sd=1), nrow=100, ncol=1)
+  spatial.re.priorpred1[,j] <- x  
+ 
+  ## Lambda of Poisson
+  lambda.priorpred1[,j] <- matrix(nc_sf$SID74, nrow=1, ncol=100)*
+    exp(linear.priorpred1[,j] + 
+          unstruc.re.priorpred1[,j] + 
+          spatial.re.priorpred1[,j])
+
+  ## Prior Predictive Counts
+  ypriorpred1[,j] <- rpois(n = 100, lambda = lambda.priorpred1[,j])
+}
+```
+
+```{r}
+
+# Ashe, Alleghany, Surry, and Northampton
+
+par(mfrow=c(2,2))
+
+hist(ypriorpred1[1,], 
+     main="Ashe: Prior predictive 1", 
+     xlab = "counts",
+     xlim=c(0, nc_sf$SID74[1] + 1500))
+abline(v=nc_sf$SID74[1], lwd=3, col="red")
+text(500, 20, paste("Number of NAs:", sum(is.na(ypriorpred1[1,]))))
+
+hist(ypriorpred1[2,], 
+     main="Alleghany: Prior predictive 1", 
+     xlab = "counts",
+     xlim=c(0, nc_sf$SID74[2] + 10))
+abline(v=nc_sf$SID74[2], lwd=3, col="red")
+text(5, 20, paste("Number of NAs:", sum(is.na(ypriorpred1[2,]))))
+
+hist(ypriorpred1[3,], 
+     main="Surry: Prior predictive 1", 
+     xlab = "counts",
+     xlim=c(0, nc_sf$SID74[3] + 20)
+     )
+abline(v=nc_sf$SID74[3], lwd=3, col="red")
+text(15, 20, paste("Number of NAs:", sum(is.na(ypriorpred1[3,]))))
+
+hist(ypriorpred1[5,], 
+     main="Northampton: Prior predictive 1", 
+     xlab = "counts", 
+     xlim=c(0, nc_sf$SID74[5] + 100000))
+abline(v=nc_sf$SID74[5], lwd=3, col="red")
+text(50000, 20, paste("Number of NAs:", sum(is.na(ypriorpred1[5,]))))
+```
+
+# Question 4.2:
+
+```{r}
+## Values of E_i and neighborhood structure
+counties <- nc_sf$CNTY_
+neighbor.nc <- poly2nb(nc_sf)
+
+prior.fixed2_model2 <- list(mean.intercept = 0, prec.intercept = 0.01,
+                    mean = 0, prec = 0.01)
+prior.prec2_model2 <- list(prec = list(prior = "loggamma", 
+                               param = c(1, 1)))
+
+nb2INLA("nc.adj", neighbor.nc)
+g <- inla.read.graph(filename = "nc.adj")
+
+nc_sf$re_u <- 1:nrow(nc_sf)
+nc_sf$re_v <- 1:nrow(nc_sf)
+
+formula1 <- deaths ~
+  f(re_u, model = "besag", graph = g, 
+    hyper = list(prec = list(prior = "loggamma",param = c(1, 1)))) + 
+  f(re_v, model = "iid", 
+    hyper = list(prec = list(prior = "loggamma",param = c(1, 1))))
+
+#model1 <- inla(formula = formula1,
+                            #data = data.frame(latcab),
+                            #control.fixed = prior.fixed2_model2,
+                            #control.family = list(hyper = list(prec = prior.prec2_model2)),
+                            #control.compute=list(config = TRUE))
+```
+
+
+# Question 4.3:
+
+```{r}
+#nc_sf$popr1.1 <- ypostpred1[,1]
+
+```

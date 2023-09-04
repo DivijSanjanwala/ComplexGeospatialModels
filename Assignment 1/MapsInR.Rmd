@@ -1,0 +1,198 @@
+---
+title: "Maps in R!"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# ST465-- Making Maps in R
+
+Today we'll go over how to make maps in R and how to work with spatial data sets. Some of the key R packages that we'll work with are `tmap`, `mapview` for map making and `sf`, `spData`, `spDataLarge` for working with spatial data.
+
+```{r}
+## R packages 
+
+library(tmap) ## Very commonly used -- to make static and interactive plots
+library(mapview)
+library(leaflet)
+library(shiny)
+library(tidyverse)
+library(spDataLarge) ## Data sets -- use commands in notes to download
+library(spData) ## Data sets
+library(sf) ## simple features
+```
+
+## tmap 
+
+Let's work with the `world` and `coffee` data sets. For each, identify the type of object it is and its coordinate reference system (CRS).
+
+```{r}
+#data("world")
+world
+coffee_data
+world_coffee = dplyr::left_join(world, coffee_data, by = "name_long")
+world_coffee
+```
+
+We've created a new data set called world_coffee, what type of object is it and what is its CRS? 
+
+Let's plot the spatial object using the R package `tmap`.
+
+```{r}
+## tmap_mode "view" set to interactive viewing
+tmap_mode("plot")
+facets = c("coffee_production_2016", "coffee_production_2017")
+
+tm_shape(world_coffee) + 
+  tm_polygons(facets) + 
+  tm_facets(nrow = 1, sync = TRUE)
+```
+Now let's use the `World` data set (not that `world` and `World` are different data sets.)
+
+```{r}
+data("World")
+World 
+```
+
+HPI stands for "Happy Planet Index" and provides a quantification of a country's "happiness". More information here: https://happyplanetindex.org 
+Let's check it out:
+
+```{r}
+tmap_mode("view")
+
+tm_shape(World) +
+    tm_polygons("HPI")
+
+```
+Let's look at the HPI along with economy type:
+
+```{r}
+
+tmap_mode("view")
+tm_shape(World) +
+    tm_polygons(c("HPI", "inequality")) +
+    tm_facets(sync = TRUE, ncol = 2)
+
+```
+We continue to make maps, this time with the `metro` data set. What information is provided? What is the geometry type and what is the CRS?
+
+```{r}
+## reading in data
+data(metro)
+metro 
+```
+
+```{r}
+tmap_mode("view")
+tm_basemap("Stamen.Watercolor") +
+tm_shape(metro) + tm_bubbles(size = "pop2020", col = "red") +
+tm_tiles("Stamen.TonerLabels")
+
+```
+
+You can also play around with the style in `tmap`.
+
+```{r}
+tmap_style("classic")
+## tmap style set to "classic"
+## other available styles are: "white", "gray", "natural", "cobalt", "col_blind", "albatross", "beaver", "bw", "watercolor"
+
+tm_shape(World) +
+    tm_polygons("HPI", legend.title = "Happy Planet Index")
+
+```
+
+We can also look through some data from New Zealand. As the others, what type of object is it and what is the CRS? How it different from others and why might that be the case?
+
+```{r}
+
+## New Zealand
+nz
+
+```
+
+```{r}
+
+legend_title = expression("Area (km"^2*")")
+map_nza = tm_shape(nz) +
+  tm_fill(col = "Land_area", title = legend_title) + tm_borders()
+map_nza + tm_style("bw")
+map_nza + tm_style("classic")
+map_nza + tm_style("cobalt")
+map_nza + tm_style("col_blind")
+
+```
+
+## mapview
+
+Let's use `mapview` now, another common R package for constructing spatial maps. We'll use the `trails` and `franconia` data set. What kind of objects are they and what is its CRS?
+
+```{r}
+trails 
+franconia
+```
+
+What does it look like if we only plot the trails data?
+
+```{r, eval=F}
+trails%>%
+  mapview()
+```
+
+What about the franconia data set?
+
+```{r, eval=F}
+franconia%>%
+  mapview()
+```
+We'd like to plot the trails onto the map, but they're not the same CRS. In lecture, we saw that we can use a suite of functions starting with `st_` to modify a spatial object. We'll use a few here to change the crs and plot the data sets together:
+
+```{r, eval = F}
+
+## first, using st_transform() function we changed the CRS 
+trails %>%
+  st_transform(st_crs(franconia)) %>%
+  st_intersection(franconia[franconia$district == "Oberfranken", ]) %>%
+  st_collection_extract("LINE") %>%
+  mapview(color = "red", lwd = 3, layer.name = "trails") +
+  mapview(franconia, zcol = "district", burst = TRUE) 
+```
+
+Lastly, suppose you also wanted to know about any breweries along the trails. Let's check out the `breweries` data set. What kind of object is it and what is its CRS?
+
+```{r, eval = F}
+breweries
+```
+
+What does a map of the breweries look like? 
+
+```{r, eval = F}
+breweries%>%
+  mapview()
+```
+Let's combine them all: 
+
+```{r, eval=F}
+trails %>%
+  st_transform(st_crs(franconia)) %>%
+  st_intersection(franconia[franconia$district == "Oberfranken", ]) %>%
+  st_collection_extract("LINE") %>%
+  mapview(color = "red", lwd = 3, layer.name = "trails") +
+  mapview(franconia, zcol = "district", burst = TRUE) +
+  breweries
+```
+
+## tmap 
+
+What if we tried to do this in `tmap`?
+
+```{r}
+tm_shape(franconia) + tm_fill("district") + 
+tm_shape(trails) + tm_lines() + 
+tm_shape(breweries) + tm_dots()
+```
+
+
+
